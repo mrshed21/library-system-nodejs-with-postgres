@@ -11,7 +11,7 @@ const sequelize = require('./config/sequelize');
 const authorsRouter = require('./routes/Authors');
 const booksRouter = require('./routes/Books');
 const genresRouter = require('./routes/Genres');
-
+const errorHandler = require('./middleware/errorHandler');        
 
 app.use(cors());
 app.use(express.json());
@@ -24,19 +24,18 @@ app.get('/', (req, res) => {
 
 
 app.use('/api', booksRouter);
-
-
 app.use('/api', authorsRouter);
 app.use('/api', genresRouter);
 
 
 app.use((req, res, next) => {
-    res.status(404).json({ error: 'Not found' });
+    const error = new Error(`Route ${req.originalUrl} not found`);
+    error.status = 404;
+    next(error);
 });
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ error: 'Something broke!' });
-});
+
+
+app.use(errorHandler);
 
 
 

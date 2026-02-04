@@ -1,0 +1,60 @@
+const authorService = require('../services/authors.service');
+
+// get all authors
+exports.getAuthors = async (req, res, next) => {
+    try {
+        const authors = await authorService.getAuthors();
+        res.json(authors);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// get author by id
+exports.getAuthorById = async (req, res, next) => {
+    try {
+        const author = await authorService.getAuthorById(req.params.id);
+        res.json(author);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// create author
+exports.createAuthor = async (req, res, next) => {
+    const { name, year_of_birth } = req.body;
+    if(!name || !year_of_birth) {
+        const error = new Error('Name and year of birth are required');
+        error.statusCode = 400;
+        throw error;
+    }
+    try {
+        const author = await authorService.createAuthor(req.body);
+        res.json(author);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// update author
+exports.updateAuthor = async (req, res, next) => {
+    try {
+        const author = await authorService.updateAuthor(req.params.id, req.body);
+        res.json(author);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// delete author
+exports.deleteAuthor = async (req, res, next) => {
+    try {
+        const author = await authorService.deleteAuthor(req.params.id);
+        res.json(author);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+

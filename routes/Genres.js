@@ -1,22 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const { Genres } = require('../models/models');
+const genreController = require('../controllers/genre.controller');
 
+// Get all genres
+router.get('/genres', genreController.getGenres );
 
+// get genre by id
+router.get('/genres/:id', genreController.getGenreById);
 
+// create new genre
+router.post('/genres', genreController.createGenre);
 
-router.get('/genres',async (req, res) => {
-    try {
-        const allGenres = await Genres.findAll();
-        console.log(allGenres)
-        if(allGenres.length === 0) {
-            return res.status(404).json({ error: 'No genres found' });
-        }
-        res.json(allGenres);
-    } catch (error) {
-        console.error('Error fetching genres:', error);
-        res.status(500).json({ error: 'Unable to fetch genres', details: error.message });
-    }
-});
+// update genre by id
+router.put('/genres/:id', genreController.updateGenre);
+
+// delete genre by id
+router.delete('/genres/:id', genreController.deleteGenre);
 
 module.exports = router;
