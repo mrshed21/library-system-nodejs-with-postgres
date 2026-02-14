@@ -2,6 +2,7 @@ const Authors = require('./authors');
 const Books = require('./books');
 const Genres = require('./genres');
 const BookGenres = require('./bookGenres');
+const Users = require('./Users');
 
  
 
@@ -24,6 +25,7 @@ const models = {
     Books,
     Genres,
     BookGenres,
-    };
+    Users
+};
 
 module.exports = models;

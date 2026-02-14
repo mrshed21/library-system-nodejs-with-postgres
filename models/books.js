@@ -13,15 +13,17 @@ const Books = sequelize.define(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      require
+      require: true,
     },
     price: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
+      require: true,
     },
     stock: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      require: true,
     },
     author_id: {
       type: DataTypes.INTEGER,

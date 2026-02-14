@@ -11,6 +11,10 @@ const sequelize = require('./config/sequelize');
 const authorsRouter = require('./routes/Authors');
 const booksRouter = require('./routes/Books');
 const genresRouter = require('./routes/Genres');
+const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
+
+
 const errorHandler = require('./middleware/errorHandler');        
 
 app.use(cors());
@@ -26,6 +30,13 @@ app.get('/', (req, res) => {
 app.use('/api', booksRouter);
 app.use('/api', authorsRouter);
 app.use('/api', genresRouter);
+app.use('/api', usersRouter);
+
+
+
+app.use('/api', authRouter);
+
+
 
 
 app.use((req, res, next) => {
