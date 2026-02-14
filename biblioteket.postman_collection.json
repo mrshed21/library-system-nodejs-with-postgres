@@ -49,7 +49,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4000/api/books/102",
+							"raw": "localhost:4000/api/books/102sdf",
 							"host": [
 								"localhost"
 							],
@@ -57,7 +57,7 @@
 							"path": [
 								"api",
 								"books",
-								"102"
+								"102sdf"
 							]
 						}
 					},
@@ -70,7 +70,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"new test with new filter\",\r\n    \"author_id\": 4,\r\n    \"price\": 23,\r\n    \"stock\": 2 ,\r\n     \"genre_ids\": [2,10]\r\n    }",
+							"raw": "{\r\n    \"name\": \"new test with new filter\",\r\n    \"author_id\": 4,\r\n    \"price\": -0,\r\n    \"stock\": 2 ,\r\n     \"genre_ids\": [2,10]\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -106,7 +106,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:4000/api/books/21",
+							"raw": "localhost:4000/api/books/ش",
 							"host": [
 								"localhost"
 							],
@@ -114,7 +114,7 @@
 							"path": [
 								"api",
 								"books",
-								"21"
+								"ش"
 							]
 						}
 					},
@@ -193,7 +193,7 @@
 							"raw": "{\r\n    \"genre_ids\" :[1,2]\r\n}"
 						},
 						"url": {
-							"raw": "localhost:4000/api/authors/2",
+							"raw": "localhost:4000/api/authors/sdf",
 							"host": [
 								"localhost"
 							],
@@ -201,7 +201,7 @@
 							"path": [
 								"api",
 								"authors",
-								"2"
+								"sdf"
 							]
 						}
 					},
@@ -323,7 +323,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:4000/api/genres/34",
+							"raw": "localhost:4000/api/genres/3",
 							"host": [
 								"localhost"
 							],
@@ -331,7 +331,7 @@
 							"path": [
 								"api",
 								"genres",
-								"34"
+								"3"
 							]
 						}
 					},
@@ -409,6 +409,177 @@
 								"api",
 								"genres",
 								"34"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4000/api/users",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"name\" : \"new user 3f\"   , \"email\": \"emai2l23@damil.com\", \"password\": \"1342werg\"\n}"
+						},
+						"url": {
+							"raw": "localhost:4000/api/users/11",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"users",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create new user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"name\" : \"new user 3f\"   , \"email\": \"mail1@damil.com\", \"password\": \"1342werg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/api/users",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"new usasdfer 3f\"   ,\n    \"email\": \"emai2al23@damil.com\",\n    \"password\": \"afaa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/api/users/12",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"users",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"new user 3f\"   ,\n    \"email\": \"emai2l23@damil.com\",\n    \"password\": \"1342werg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/api/users/11",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"users",
+								"11"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \n  \"email\": \"lina@test.com\", \n  \"password\": \"1342werg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/api/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"auth",
+								"login"
 							]
 						}
 					},
