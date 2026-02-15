@@ -7,6 +7,7 @@ const bookController = require('../controllers/book.controller');
 const validate = require('../middleware/validate');
 const { createBookSchema, updateBookSchema } = require('../schemas/book.schema');
 
+const { authMiddleware ,adminonly } = require('../middleware/auth');
 
 
 // get all books
@@ -16,12 +17,12 @@ router.get('/books', bookController.getBooks);
 router.get('/books/:id', validateId,  bookController.getBookById )
 
 // create book
-router.post('/books', validate(createBookSchema), bookController.createBook)
+router.post('/books',authMiddleware,adminonly, validate(createBookSchema), bookController.createBook)
 
 // update book
-router.put('/books/:id', validateId, validate(updateBookSchema), bookController.updateBook)
+router.put('/books/:id',authMiddleware,adminonly, validateId, validate(updateBookSchema), bookController.updateBook)
 
 // delete book
-router.delete('/books/:id', validateId, bookController.deleteBook)
+router.delete('/books/:id',authMiddleware,adminonly, validateId, bookController.deleteBook)
 
 module.exports = router;

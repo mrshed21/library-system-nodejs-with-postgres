@@ -1,7 +1,5 @@
-const { DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize");
-const Books = require("./books");
-const Genres = require("./genres");
+
 
 //TODO implement the BookGenres model
 

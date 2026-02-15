@@ -7,20 +7,23 @@ const userController = require('../controllers/user.controller');
 const validate = require('../middleware/validate');
 const { createUserSchema, updateUserSchema } = require('../schemas/user.schema');
 
+const { authMiddleware, adminonly } = require('../middleware/auth');
+
+const { checkOwnershipOrAdmin } = require('../middleware/checkOwnershipOrAdmin');
+
 // get all users
-router.get('/users', userController.getUsers);
+router.get('/users',authMiddleware, adminonly, userController.getUsers);
 
 // get user by id
-router.get('/users/:id', validateId, userController.getUserById);
+router.get('/users/:id',authMiddleware,adminonly ,  validateId, userController.getUserById);
 
-// create user
-router.post('/users', validate(createUserSchema), userController.createUser);
+
 
 // update user
-router.put('/users/:id', validateId, validate(updateUserSchema), userController.updateUser);
+router.put('/users/:id',authMiddleware, checkOwnershipOrAdmin, validateId, validate(updateUserSchema), userController.updateUser);
 
 // delete user
-router.delete('/users/:id', validateId, userController.deleteUser);
+router.delete('/users/:id',authMiddleware, checkOwnershipOrAdmin, validateId, userController.deleteUser);
 
 
 

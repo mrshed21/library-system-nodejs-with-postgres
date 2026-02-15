@@ -1,5 +1,46 @@
-const { Users } = require("../models/models");
+const { Users , RefreshToken } = require("../models/models");
+const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+
+// create user
+exports.createUser = async (user) => {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const newUser = await Users.create({
+        ...user,
+        password: hashedPassword
+    });
+
+
+    const {id, name, email, role, isActive} = newUser;
+
+    const token = jwt.sign({ id: id , role: role , email: email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    
+     // generate refresh token
+    const refreshTokenValue = crypto.randomBytes(64).toString('hex');
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+    await RefreshToken.create({ 
+        token: refreshTokenValue, 
+        expiresAt ,
+        user_id : newUser.id, 
+    });
+
+
+    
+
+
+    return {
+        data: {id,name,email,role,isActive},
+        token,
+        refreshTokenValue,
+        expiresAt
+    };
+
+};
+
+
 
 // login user
 exports.loginUser = async (user) => {
@@ -26,6 +67,7 @@ exports.loginUser = async (user) => {
         throw error;
     }
 
+
     const userData = {
         id: existingUser.id,
         name: existingUser.name,
@@ -34,10 +76,71 @@ exports.loginUser = async (user) => {
         isActive: existingUser.isActive
     };
 
+    // generate access token
+    const token = jwt.sign({ id: existingUser.id , role: existingUser.role , email: existingUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    // generate refresh token
+    const refreshTokenValue = crypto.randomBytes(64).toString('hex');
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+    await RefreshToken.create({ 
+        token: refreshTokenValue, 
+        expiresAt ,
+        user_id : existingUser.id, 
+    });
+
+
+    
+
+
     return {
-        success: true,
-        message: 'User logged in successfully',
-        data: userData
+        data: userData,
+        token,
+        refreshTokenValue,
+        expiresAt
     };
 
 };
+
+// refresh token
+exports.refreshAccessToken = async (refreshTokenValue) => {
+  
+
+  const dbToken = await RefreshToken.findOne({ where: { token: refreshTokenValue } });
+  if (!dbToken) {
+    const error = new Error('Refresh token invalid');
+    error.status = 401;
+    throw error;
+  }
+
+  if (dbToken.expiresAt < new Date()) {
+    const error = new Error('Refresh token expired');
+    error.status = 401;
+    throw error;
+  }
+
+
+  const user = await Users.findByPk(dbToken.userId);
+
+  if (!user) {
+    const error = new Error('User not found');
+    error.status = 404;
+    throw error;
+  }
+
+
+  const accessToken = jwt.sign(
+    { id: user.id, role: user.role, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: '1h' }
+  );
+
+  return accessToken;
+};
+
+
+// logout user
+exports.logout = async (refreshToken) => {
+  await RefreshToken.destroy({ where: { token: refreshToken } });
+};
+

@@ -10,6 +10,7 @@ const Authors = sequelize.define('Authors', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        
     },
     year_of_birth: {
         type: DataTypes.INTEGER,

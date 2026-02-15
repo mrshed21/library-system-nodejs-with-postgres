@@ -14,6 +14,7 @@ const Books = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       require: true,
+      
     },
     price: {
       type: DataTypes.DECIMAL(10, 2),

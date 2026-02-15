@@ -8,6 +8,9 @@ const { validateId } = require('../middleware/idParamValidation');
 
 const { createAuthorSchema, updateAuthorSchema } = require('../schemas/author.schema');
 
+const { authMiddleware ,adminonly } = require('../middleware/auth');
+
+
 const authorController = require('../controllers/author.controller');
 
 // get all authors
@@ -17,12 +20,12 @@ router.get('/authors', authorController.getAuthors);
 router.get('/authors/:id', validateId, authorController.getAuthorById);
 
 // create author
-router.post('/authors', validate(createAuthorSchema), authorController.createAuthor);
+router.post('/authors',authMiddleware,adminonly, validate(createAuthorSchema), authorController.createAuthor);
 
 // update author
-router.put('/authors/:id', validateId, validate(updateAuthorSchema), authorController.updateAuthor);
+router.put('/authors/:id',authMiddleware,adminonly, validateId, validate(updateAuthorSchema), authorController.updateAuthor);
 
 // delete author
-router.delete('/authors/:id', validateId, authorController.deleteAuthor);
+router.delete('/authors/:id',authMiddleware,adminonly, validateId, authorController.deleteAuthor);
 
 module.exports = router;

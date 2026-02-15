@@ -5,6 +5,8 @@ const { validateId } = require('../middleware/idParamValidation');
 const validate = require('../middleware/validate');
 const { createGenreSchema, updateGenreSchema } = require('../schemas/genre.schema');
 
+const { authMiddleware ,adminonly } = require('../middleware/auth');
+
 
 
 const genreController = require('../controllers/genre.controller');
@@ -16,12 +18,12 @@ router.get('/genres', genreController.getGenres );
 router.get('/genres/:id', validateId, genreController.getGenreById);
 
 // create new genre
-router.post('/genres', validate(createGenreSchema), genreController.createGenre);
+router.post('/genres',authMiddleware,adminonly, validate(createGenreSchema), genreController.createGenre);
 
 // update genre by id
-router.put('/genres/:id', validateId, validate(updateGenreSchema), genreController.updateGenre);
+router.put('/genres/:id',authMiddleware,adminonly, validateId, validate(updateGenreSchema), genreController.updateGenre);
 
 // delete genre by id
-router.delete('/genres/:id', validateId, genreController.deleteGenre);
+router.delete('/genres/:id',authMiddleware,adminonly, validateId, genreController.deleteGenre);
 
 module.exports = router;

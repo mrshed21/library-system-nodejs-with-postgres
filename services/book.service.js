@@ -19,6 +19,7 @@ exports.getBooks = async (query) => {
             model: Genres,
             through: { attributes: [] }
         }],
+        distinct: true,
         limit: limit,
         offset: offset,
         order: [['id', 'ASC']]
@@ -66,6 +67,17 @@ exports.getBookById = async (id) => {
 // create book
 exports.createBook = async (bookData) => {
     const { name, price, stock, author_id, genre_ids } = bookData;
+
+        const existingBook = await Books.findOne({
+            where: {
+                name: name
+            }
+        });
+        if (existingBook) {
+            const error = new Error('Book already exists');
+            error.status = 400;
+            throw error;
+        }
     
         const author = await Authors.findByPk(author_id);
         if (!author) {

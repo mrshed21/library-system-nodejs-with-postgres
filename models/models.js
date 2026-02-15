@@ -3,7 +3,7 @@ const Books = require('./books');
 const Genres = require('./genres');
 const BookGenres = require('./bookGenres');
 const Users = require('./Users');
-
+const RefreshToken = require('./RefreshToken');
  
 
 Books.belongsToMany(Genres, {
@@ -20,12 +20,14 @@ Genres.belongsToMany(Books, {
 
 
 
+
 const models = {
     Authors,
     Books,
     Genres,
     BookGenres,
-    Users
+    Users,
+    RefreshToken
 };
 
 module.exports = models;
