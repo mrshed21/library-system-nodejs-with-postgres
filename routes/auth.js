@@ -6,6 +6,10 @@ const { createUserSchema } = require('../schemas/user.schema');
 
 const validate = require('../middleware/validate');
 const authController = require('../controllers/auth.controller');
+const { authMiddleware } = require('../middleware/auth');
+const { loginLimiter } = require('../middleware/limiter');
+
+
 
 // create user
 router.post('/auth/register', validate(createUserSchema), authController.createUser);
@@ -13,7 +17,16 @@ router.post('/auth/register', validate(createUserSchema), authController.createU
 
 
 // login user
-router.post('/auth/login', validate(loginUserSchema), authController.loginUser);
+router.post('/auth/login',loginLimiter, validate(loginUserSchema), authController.loginUser);
+
+
+// me
+router.get('/auth/me',authMiddleware, authController.getMe);
+
+
+// update user
+router.put('/auth/me',authMiddleware, authController.updateUser);
+
 
 // refresh token
 router.post('/auth/refresh', authController.refreshToken);

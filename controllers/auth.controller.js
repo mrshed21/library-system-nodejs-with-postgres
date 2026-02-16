@@ -1,4 +1,5 @@
 const authService = require("../services/auth.service");
+const userService = require("../services/user.service");
 
 exports.createUser = async (req, res, next) => {
   try {
@@ -91,3 +92,36 @@ exports.refreshToken = async (req, res, next) => {
     next(err);
   }
 }; 
+
+
+exports.getMe = async (req ,res , next)=> {
+  try {
+    const userId = req.user.id
+
+    const user = await userService.getUserById(userId)
+
+    res.json({
+      success: true,
+      message: "User fetched successfully",
+      data: user,
+    })
+  } catch (error) {
+    next (error)
+  }
+}
+
+exports.updateUser = async (req , res ,next) => {
+  try {
+    const userId = req.user.id
+
+    const updatedUser = await authService.updateUser(userId , req.body)
+
+    res.json({
+      success: true,
+      message: "User updated successfully",
+      data: updatedUser,
+    })
+  } catch (error) {
+    next(error)
+  }
+}

@@ -1,4 +1,4 @@
-const { Users } = require("../models/models");
+const { Users ,Books ,FavoriteBooks } = require("../models/models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -81,4 +81,64 @@ exports.deleteUser = async (id) => {
         message: 'User deleted successfully',
         data: deletedUser
     };
+};
+
+
+exports.getFavoriteBooks = async (id) => {
+    const favoriteBooks = await Users.findByPk(id, {
+        include: [{
+            model: Books,
+            as: 'Favorites',
+            through: { attributes: [] }
+        }]
+    });
+    if (!favoriteBooks) {
+        const error = new Error('favorite books not found');
+        error.status = 404;
+        throw error;
+    }
+    if (favoriteBooks.Favorites.length === 0) {
+        const error = new Error('no favorite books found');
+        error.status = 404;
+        throw error;
+    }
+    const favoriteBooksData = favoriteBooks.Favorites.map(book => book.toJSON());
+    return favoriteBooksData;
+};
+
+exports.addFavoriteBook = async (id, book_id) => {
+    const [favoriteBook, created] = await FavoriteBooks.findOrCreate({
+        where: {
+            user_id: id,
+            book_id: book_id
+        }
+    });
+    if (!created) {
+        const error = new Error('favorite book is already in your favorites');
+        error.status = 400;
+        throw error;
+    }
+    const book = await Books.findByPk(book_id);
+    if (!book) {
+        const error = new Error('book not found');
+        error.status = 404;
+        throw error;
+    }
+    return book ;
+};
+
+exports.deleteFavoriteBook = async (id, book_id) => {
+    const favoriteBook = await FavoriteBooks.findOne({
+        where: {
+            user_id: id,
+            book_id: book_id
+        }
+    });
+    if (!favoriteBook) {
+        const error = new Error('favorite book not found');
+        error.status = 404;
+        throw error;
+    }
+    await favoriteBook.destroy();
+    return favoriteBook;
 };

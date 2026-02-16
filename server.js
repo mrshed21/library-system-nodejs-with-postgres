@@ -5,6 +5,9 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 const sequelize = require('./config/sequelize');
+const helmet = require('helmet');
+
+const { defaultLimiter } = require('./middleware/limiter');
 
 
 
@@ -20,6 +23,7 @@ const errorHandler = require('./middleware/errorHandler');
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'frontend')));
+app.use(helmet());
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
@@ -27,6 +31,7 @@ app.get('/', (req, res) => {
 
 
 
+app.use('/api', defaultLimiter);
 app.use('/api', booksRouter);
 app.use('/api', authorsRouter);
 app.use('/api', genresRouter);

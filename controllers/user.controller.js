@@ -33,3 +33,58 @@ exports.deleteUser = async (req, res, next) => {
         next(error);
     }
 };
+
+
+
+exports.getFavoriteBooks = async (req, res, next) => {
+    try {
+        const favoriteBooks = await userService.getFavoriteBooks(req.user.id);
+        res.json({
+            success: true,
+            message: 'Favorite books fetched successfully',
+            count: favoriteBooks?.length || 0,
+            data: favoriteBooks
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.addFavoriteBook = async (req, res, next) => {
+    try {
+        const { book_id } = req.body;   
+        if (!book_id) {
+            const error = new Error('Book ID is required');
+            error.status = 400;
+            throw error;
+        }
+        const favoriteBook = await userService.addFavoriteBook(req.user.id, book_id);
+        
+        res.json({
+            success: true,
+            message: 'Favorite book added successfully',
+            data:  favoriteBook 
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.deleteFavoriteBook = async (req, res, next) => {
+    try {
+        const bookId = req.params.bookId;
+        if (!bookId) {
+            const error = new Error('Book ID is required');
+            error.status = 400;
+            throw error;
+        }
+        const deletedFavoriteBook = await userService.deleteFavoriteBook(req.user.id, bookId);
+        res.json({
+            success: true,
+            message: 'Favorite book deleted successfully',
+            data: { message: 'Favorite book deleted successfully' }
+        });
+    } catch (error) {
+        next(error);
+    }
+};

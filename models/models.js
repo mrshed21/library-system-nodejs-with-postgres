@@ -4,6 +4,7 @@ const Genres = require('./genres');
 const BookGenres = require('./bookGenres');
 const Users = require('./Users');
 const RefreshToken = require('./RefreshToken');
+const FavoriteBooks = require('./FavoriteBooks');
  
 
 Books.belongsToMany(Genres, {
@@ -18,7 +19,8 @@ Genres.belongsToMany(Books, {
   otherKey: "book_id"
 });
 
-
+Users.belongsToMany(Books, { through: FavoriteBooks, as: 'Favorites' ,foreignKey: 'user_id'});
+Books.belongsToMany(Users, { through: FavoriteBooks, as: 'FavoredBy' ,foreignKey: 'book_id'});
 
 
 const models = {
@@ -27,7 +29,8 @@ const models = {
     Genres,
     BookGenres,
     Users,
-    RefreshToken
+    RefreshToken,
+    FavoriteBooks
 };
 
 module.exports = models;
