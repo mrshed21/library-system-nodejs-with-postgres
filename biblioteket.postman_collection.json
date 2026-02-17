@@ -11,6 +11,297 @@
       "name": "books",
       "item": [
         {
+          "name": "admin",
+          "item": [
+            {
+              "name": "bookCopeis",
+              "item": [
+                {
+                  "name": "get all bookCopies",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE4ODU1LCJleHAiOjE3NzEzMjI0NTV9.TE8cC4116nTlGA5nDEKwjAtbRcrKz3KoYCzrLU4Y34U",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"bookData\" : {\r\n                    \"name\" : \"updated book with service controll\"  ,\r\n                    \"genre_ids\" :[3,4]\r\n                }\r\n}"
+                    },
+                    "url": {
+                      "raw": "localhost:4000/api/admin/book-copies",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "4000",
+                      "path": [
+                        "api",
+                        "admin",
+                        "book-copies"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create new bookCopy",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE4ODU1LCJleHAiOjE3NzEzMjI0NTV9.TE8cC4116nTlGA5nDEKwjAtbRcrKz3KoYCzrLU4Y34U",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"book_id\": 4 , \r\n  \"conditionStatus\" : \"AVAILABLE\" , \r\n  \"shelfLocation\" : \"LOC001\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "localhost:4000/api/admin/book-copies",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "4000",
+                      "path": [
+                        "api",
+                        "admin",
+                        "book-copies"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update bookCopy",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE4ODU1LCJleHAiOjE3NzEzMjI0NTV9.TE8cC4116nTlGA5nDEKwjAtbRcrKz3KoYCzrLU4Y34U",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"book_id\": 4 , \r\n  \"conditionStatus\" : \"AVAILABLE\" , \r\n  \"shelfLocation\" : \"LOC0022\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "localhost:4000/api/admin/book-copies/101",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "4000",
+                      "path": [
+                        "api",
+                        "admin",
+                        "book-copies",
+                        "101"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete bookCopy",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE4ODU1LCJleHAiOjE3NzEzMjI0NTV9.TE8cC4116nTlGA5nDEKwjAtbRcrKz3KoYCzrLU4Y34U",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"book_id\": 4 , \r\n  \"conditionStatus\" : \"AVAILABLE\" , \r\n  \"shelfLocation\" : \"LOC0022\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "localhost:4000/api/admin/book-copies/101",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "4000",
+                      "path": [
+                        "api",
+                        "admin",
+                        "book-copies",
+                        "101"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get bookCopy by id",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE4ODU1LCJleHAiOjE3NzEzMjI0NTV9.TE8cC4116nTlGA5nDEKwjAtbRcrKz3KoYCzrLU4Y34U",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"bookData\" : {\r\n                    \"name\" : \"updated book with service controll\"  ,\r\n                    \"genre_ids\" :[3,4]\r\n                }\r\n}"
+                    },
+                    "url": {
+                      "raw": "localhost:4000/api/admin/book-copies/100",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "4000",
+                      "path": [
+                        "api",
+                        "admin",
+                        "book-copies",
+                        "100"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "delete book by id",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE1MTAyLCJleHAiOjE3NzEzMTg3MDJ9.prNPOQQ2BVhLfdZe7RI0b_qS9J0zIdggfEgQI96wn2k",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:4000/api/admin/books/25",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "admin",
+                    "books",
+                    "25"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update book by id",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE1MTAyLCJleHAiOjE3NzEzMTg3MDJ9.prNPOQQ2BVhLfdZe7RI0b_qS9J0zIdggfEgQI96wn2k",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"bookData\" : {\r\n                    \"name\" : \"updated book with service controll\"  ,\r\n                    \"genre_ids\" :[3,4]\r\n                }\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:4000/api/admin/books/25",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "admin",
+                    "books",
+                    "25"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "create new book",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE1MTAyLCJleHAiOjE3NzEzMTg3MDJ9.prNPOQQ2BVhLfdZe7RI0b_qS9J0zIdggfEgQI96wn2k",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"new test with new filter\",\r\n    \"author_id\": 4,\r\n    \"price\": 22,\r\n     \"genre_ids\": [2,10]\r\n    }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:4000/api/admin/books",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "admin",
+                    "books"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
           "name": "get all books",
           "request": {
             "method": "GET",
@@ -50,7 +341,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "localhost:4000/api/books/24",
+              "raw": "localhost:4000/api/books/12",
               "host": [
                 "localhost"
               ],
@@ -58,111 +349,7 @@
               "path": [
                 "api",
                 "books",
-                "24"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "create new book",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMTQwMDQ1LCJleHAiOjE3NzExNDM2NDV9.UwjXk8Bg7hu6gj5F6tCW7_A63s7unjXEX5WlDbjsThI",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"name\": \"new test with new filter\",\r\n    \"author_id\": 4,\r\n    \"price\": 22,\r\n    \"stock\": 2 ,\r\n     \"genre_ids\": [2,10]\r\n    }",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "localhost:4000/api/books",
-              "host": [
-                "localhost"
-              ],
-              "port": "4000",
-              "path": [
-                "api",
-                "books"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "delete book by id",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMTQwMDQ1LCJleHAiOjE3NzExNDM2NDV9.UwjXk8Bg7hu6gj5F6tCW7_A63s7unjXEX5WlDbjsThI",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "localhost:4000/api/books/24",
-              "host": [
-                "localhost"
-              ],
-              "port": "4000",
-              "path": [
-                "api",
-                "books",
-                "24"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "update book by id",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMTQwMDQ1LCJleHAiOjE3NzExNDM2NDV9.UwjXk8Bg7hu6gj5F6tCW7_A63s7unjXEX5WlDbjsThI",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"bookData\" : {\r\n                    \"name\" : \"updated book with service controll\"  ,\r\n                    \"genre_ids\" :[3,4]\r\n                }\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "localhost:4000/api/books/24",
-              "host": [
-                "localhost"
-              ],
-              "port": "4000",
-              "path": [
-                "api",
-                "books",
-                "24"
+                "12"
               ]
             }
           },
@@ -475,6 +662,118 @@
       "name": "users",
       "item": [
         {
+          "name": "favorite",
+          "item": [
+            {
+              "name": "get favorite books",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzEzMjE0MzgsImV4cCI6MTc3MTMyNTAzOH0.Umh7UE9_2LiXdISQM3SAK0ZQmtKeS0U-bnuRAn_BYow",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "localhost:4000/api/users/me/favorite-books",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "users",
+                    "me",
+                    "favorite-books"
+                  ],
+                  "query": [
+                    {
+                      "key": "authorId",
+                      "value": "3",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "create favorite book",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzEzMjE0MzgsImV4cCI6MTc3MTMyNTAzOH0.Umh7UE9_2LiXdISQM3SAK0ZQmtKeS0U-bnuRAn_BYow",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"book_id\"  :16\n\n\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:4000/api/users/me/favorite-books",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "users",
+                    "me",
+                    "favorite-books"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete favorite book",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE4ODU1LCJleHAiOjE3NzEzMjI0NTV9.TE8cC4116nTlGA5nDEKwjAtbRcrKz3KoYCzrLU4Y34U",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"book_id\"  :16\n\n\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:4000/api/users/me/favorite-books/13",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "users",
+                    "me",
+                    "favorite-books",
+                    "13"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
           "name": "get all users",
           "request": {
             "method": "GET",
@@ -614,7 +913,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"mail1@damil.com\",\n    \"password\": \"1342werg\"\n}",
+              "raw": "{\n    \"email\": \"user4@user.com\",\n    \"password\": \"123456\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -631,6 +930,79 @@
                 "api",
                 "auth",
                 "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update my info",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMjEwNzM1LCJleHAiOjE3NzEyMTQzMzV9.4PawoWg5e_dFyLIPhOyRTIdDBY4bjFYidA8HylW3yP8",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\" : \"updated name info\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:4000/api/auth/me",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "me",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMjA1MzkxLCJleHAiOjE3NzEyMDg5OTF9.T4amD3RXhp546x_CAFqBvI57Xz9uAaPj8LQHqYA3aog",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"mail1@damil.com\",\n    \"password\": \"1342werg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:4000/api/auth/me",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "auth",
+                "me"
               ]
             }
           },
@@ -701,7 +1073,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"user1\",\n    \"email\": \"user2@user.com\",\n    \"password\": \"123456\" ,\n    \"role\": \"user\"\n}",
+              "raw": "{\n    \"name\": \"user4\",\n    \"email\": \"user5@user.com\",\n    \"password\": \"123456\" ,\n    \"role\": \"admin\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -718,6 +1090,221 @@
                 "api",
                 "auth",
                 "register"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Loan",
+      "item": [
+        {
+          "name": "admin",
+          "item": [
+            {
+              "name": "get all loans",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzEzNDI5NTEsImV4cCI6MTc3MTM0NjU1MX0.SbI5EdIaUmch8tvf2crCatTDlY2AHK1oWoeBsUPh3bU",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"book_id\" : 2\n}"
+                },
+                "url": {
+                  "raw": "localhost:4000/api/admin/loans",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "admin",
+                    "loans"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get loan by id",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzEzNDAyOTIsImV4cCI6MTc3MTM0Mzg5Mn0.pkLuctGiYQrvLAJDjj2cD2TEuPHvl5PKkmJs4Pzoktc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"book_id\" : 2\n}"
+                },
+                "url": {
+                  "raw": "localhost:4000/api/admin/loan/3",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "admin",
+                    "loan",
+                    "3"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "create a Loan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjMsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJ1c2VyNUB1c2VyLmNvbSIsImlhdCI6MTc3MTMzOTc5OSwiZXhwIjoxNzcxMzQzMzk5fQ.yWzyFSSGqFiHgNo9aR_OSLGFnyFx3aq--lKEYB5BZNs",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"book_id\" : 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:4000/api/user/loan",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "user",
+                "loan"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "return user loan",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjMsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJ1c2VyNUB1c2VyLmNvbSIsImlhdCI6MTc3MTMzOTc5OSwiZXhwIjoxNzcxMzQzMzk5fQ.yWzyFSSGqFiHgNo9aR_OSLGFnyFx3aq--lKEYB5BZNs",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"book_id\" : 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:4000/api/user/loan/2",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "user",
+                "loan",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all user loans",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjMsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJ1c2VyNUB1c2VyLmNvbSIsImlhdCI6MTc3MTM0MDU3NiwiZXhwIjoxNzcxMzQ0MTc2fQ.XcikBrEYli5A8RFc9LsfpLVXssGLDS042HxkC8MOX7E",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"book_id\" : 2\n}"
+            },
+            "url": {
+              "raw": "localhost:4000/api/user/loans",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "user",
+                "loans"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get user loan by id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjMsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJ1c2VyNUB1c2VyLmNvbSIsImlhdCI6MTc3MTM0MDU3NiwiZXhwIjoxNzcxMzQ0MTc2fQ.XcikBrEYli5A8RFc9LsfpLVXssGLDS042HxkC8MOX7E",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"book_id\" : 2\n}"
+            },
+            "url": {
+              "raw": "localhost:4000/api/user/loan/2",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "user",
+                "loan",
+                "2"
               ]
             }
           },

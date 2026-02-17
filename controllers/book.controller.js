@@ -21,9 +21,9 @@ exports.getBookById = async (req, res   , next) => {
 
 exports.createBook = async (req, res, next) => {
     try {
-    const { name, price, stock, author_id, genre_ids } = req.body;
+    const { name, price,  author_id, genre_ids } = req.body;
     
-    const book = await bookService.createBook({ name, price, stock, author_id, genre_ids });
+    const book = await bookService.createBook({ name, price,  author_id, genre_ids });
     
     res.json(book); 
     } catch (error) {

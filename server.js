@@ -16,9 +16,11 @@ const booksRouter = require('./routes/Books');
 const genresRouter = require('./routes/Genres');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
-
+const adminRouter = require('./routes/admin');
+const loanRouter = require('./routes/loanRoute');
 
 const errorHandler = require('./middleware/errorHandler');        
+const { authMiddleware,adminonly } = require('./middleware/auth');
 
 app.use(cors());
 app.use(express.json());
@@ -36,6 +38,11 @@ app.use('/api', booksRouter);
 app.use('/api', authorsRouter);
 app.use('/api', genresRouter);
 app.use('/api', usersRouter);
+app.use('/api', loanRouter);
+
+
+
+app.use('/api/admin',authMiddleware, adminonly, adminRouter);
 
 
 

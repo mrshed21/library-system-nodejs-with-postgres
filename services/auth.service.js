@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 
 // create user
 exports.createUser = async (user) => {
+  
   const hashedPassword = await bcrypt.hash(user.password, 10);
   const newUser = await Users.create({
     ...user,

@@ -5,7 +5,8 @@ const BookGenres = require('./bookGenres');
 const Users = require('./Users');
 const RefreshToken = require('./RefreshToken');
 const FavoriteBooks = require('./FavoriteBooks');
- 
+const BookCopy = require('./bookCopy');
+const Loan = require('./Loan'); 
 
 Books.belongsToMany(Genres, {
   through: BookGenres,
@@ -22,6 +23,19 @@ Genres.belongsToMany(Books, {
 Users.belongsToMany(Books, { through: FavoriteBooks, as: 'Favorites' ,foreignKey: 'user_id'});
 Books.belongsToMany(Users, { through: FavoriteBooks, as: 'FavoredBy' ,foreignKey: 'book_id'});
 
+BookCopy.belongsTo(Books, { foreignKey: 'book_id', onDelete: 'CASCADE' });
+Books.hasMany(BookCopy, { foreignKey: 'book_id', onDelete: 'CASCADE' });
+
+
+
+Loan.belongsTo(Users, { foreignKey: "user_id", onDelete: "CASCADE" });
+Users.hasMany(Loan, { foreignKey: "user_id" });
+
+Loan.belongsTo(BookCopy, { foreignKey: "book_copy_id", onDelete: "CASCADE" });
+BookCopy.hasMany(Loan, { foreignKey: "book_copy_id" });
+
+
+
 
 const models = {
     Authors,
@@ -30,7 +44,9 @@ const models = {
     BookGenres,
     Users,
     RefreshToken,
-    FavoriteBooks
+    FavoriteBooks,
+    BookCopy,
+    Loan
 };
 
 module.exports = models;

@@ -2,8 +2,9 @@ const authService = require("../services/auth.service");
 const userService = require("../services/user.service");
 
 exports.createUser = async (req, res, next) => {
+  const { name, email, password } = req.body;
   try {
-    const user = await authService.createUser(req.body);
+    const user = await authService.createUser({ name, email, password });
 
     // send refresh by httponly
     res.cookie("refreshToken", user.refreshTokenValue, {
@@ -24,8 +25,9 @@ exports.createUser = async (req, res, next) => {
   }
 };
 exports.loginUser = async (req, res, next) => {
+  const { email, password } = req.body;
   try {
-    const user = await authService.loginUser(req.body);
+    const user = await authService.loginUser({ email, password });
 
     // send refresh by httponly
     res.cookie("refreshToken", user.refreshTokenValue, {

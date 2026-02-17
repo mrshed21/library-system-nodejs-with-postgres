@@ -9,13 +9,13 @@ exports.createBookSchema = z.object({
     required_error: "Price is required",
   }).positive("Price must be positive"),
 
-  stock: z.number({
-    required_error: "Stock is required",
-  }).int("Stock must be an integer").nonnegative("Stock cannot be negative"),
-
+  genre_ids: z.array(z.number({
+    required_error: "Genre IDs are required",
+  })).min(1, "At least one genre is required"),
   author_id: z.number({
     required_error: "Author ID is required",
   }).int("Author ID must be an integer").positive("Author ID must be positive"),
 });
 
 exports.updateBookSchema = exports.createBookSchema.partial();
+

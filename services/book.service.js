@@ -66,7 +66,7 @@ exports.getBookById = async (id) => {
 
 // create book
 exports.createBook = async (bookData) => {
-    const { name, price, stock, author_id, genre_ids } = bookData;
+    const { name, price,  author_id, genre_ids } = bookData;
 
         const existingBook = await Books.findOne({
             where: {
@@ -85,7 +85,7 @@ exports.createBook = async (bookData) => {
             error.status = 404;
             throw error;
         }
-        const book = await Books.create({ name, price, stock, author_id });
+        const book = await Books.create({ name, price,  author_id });
         if (genre_ids && genre_ids.length > 0) {
             await book.setGenres(genre_ids);
         }
@@ -95,14 +95,14 @@ exports.createBook = async (bookData) => {
 
 // update book
 exports.updateBook = async (id, bookData) => {
-    const { name, price, stock, author_id, genre_ids } = bookData;
+    const { name, price,  author_id, genre_ids } = bookData;
     const book = await Books.findByPk(id);
     if (!book) {
         const error = new Error('Book not found');
         error.status = 404;
         throw error;
     }
-    await book.update({ name, price, stock, author_id });
+    await book.update({ name, price,  author_id });
 
     if (Array.isArray(genre_ids) && genre_ids.length > 0) {
         await book.setGenres(genre_ids);

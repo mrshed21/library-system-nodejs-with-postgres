@@ -32,27 +32,27 @@ INSERT INTO public."Genres" (name, "createdAt", "updatedAt") VALUES
   ('Romance', NOW(), NOW());
 
 -- Books
-INSERT INTO public."Books" (name, price, stock, author_id, "createdAt", "updatedAt") VALUES
-  ('Palace Walk', 15.99, 12, 1, NOW(), NOW()),
-  ('Men in the Sun', 9.50, 20, 2, NOW(), NOW()),
-  ('Women of Sand and Myrrh', 12.75, 7, 3, NOW(), NOW()),
-  ('The Days', 11.25, 9, 4, NOW(), NOW()),
-  ('The Map of Love', 13.40, 5, 5, NOW(), NOW()),
-  ('Palace of Desire', 16.25, 8, 1, NOW(), NOW()),
-  ('Mirage', 8.99, 15, 4, NOW(), NOW()),
-  ('The Prophet', 10.50, 18, 6, NOW(), NOW()),
-  ('Awe of the Desert', 14.10, 6, 9, NOW(), NOW()),
-  ('The Committee', 9.99, 11, 10, NOW(), NOW()),
-  ('Open Doors', 11.60, 10, 11, NOW(), NOW()),
-  ('The Stone of Laughter', 12.20, 4, 12, NOW(), NOW()),
-  ('The Trilogy: Sugar Street', 17.40, 6, 1, NOW(), NOW()),
-  ('Return to Haifa', 8.60, 13, 2, NOW(), NOW()),
-  ('Granada', 15.30, 7, 8, NOW(), NOW()),
-  ('In the Eye of the Sun', 14.90, 5, 5, NOW(), NOW()),
-  ('The Cheapest Nights', 7.80, 16, 7, NOW(), NOW()),
-  ('Season of Migration', 13.10, 9, 10, NOW(), NOW()),
-  ('Echoes of an Autobiography', 10.20, 12, 4, NOW(), NOW()),
-  ('A Balcony Over the Fakihani', 9.20, 8, 2, NOW(), NOW());
+INSERT INTO public."Books" (name, price, author_id, "createdAt", "updatedAt") VALUES
+  ('Palace Walk', 15.99,  1, NOW(), NOW()),
+  ('Men in the Sun', 9.50,  2, NOW(), NOW()),
+  ('Women of Sand and Myrrh', 12.75,  3, NOW(), NOW()),
+  ('The Days', 11.25,  4, NOW(), NOW()),
+  ('The Map of Love', 13.40,  5, NOW(), NOW()),
+  ('Palace of Desire', 16.25,  6, NOW(), NOW()),
+  ('Mirage', 8.99,  7, NOW(), NOW()),
+  ('The Prophet', 10.50,  8, NOW(), NOW()),
+  ('Awe of the Desert', 14.10,  9, NOW(), NOW()),
+  ('The Committee', 9.99,  10, NOW(), NOW()),
+  ('Open Doors', 11.60,  11, NOW(), NOW()),
+  ('The Stone of Laughter', 12.20,  12, NOW(), NOW()),
+  ('The Trilogy: Sugar Street', 17.40,  13, NOW(), NOW()),
+  ('Return to Haifa', 8.60,  14, NOW(), NOW()),
+  ('Granada', 15.30,  15, NOW(), NOW()),
+  ('In the Eye of the Sun', 14.90,  16, NOW(), NOW()),
+  ('The Cheapest Nights', 7.80,  17, NOW(), NOW()),
+  ('Season of Migration', 13.10,  18, NOW(), NOW()),
+  ('Echoes of an Autobiography', 10.20,  19, NOW(), NOW()),
+  ('A Balcony Over the Fakihani', 9.20,  20, NOW(), NOW());
 
 -- Book-Genre relationships
 INSERT INTO public.book_genres (book_id, genre_id) VALUES

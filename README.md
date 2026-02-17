@@ -1,11 +1,8 @@
-# Library API – Sequelize example
+# Library Management System API
 
-A small backend API for books, authors, and genres, built with **Express** and **Sequelize** and a **PostgreSQL** database. There is also a simple static frontend so you can see the data in the browser.
+A comprehensive library management system built with **Express**, **Sequelize**, and **PostgreSQL** database. This system includes user authentication, role-based access control, book management, author management, genre management, loan tracking, and more. Features a simple static frontend for demonstration purposes.
 
-If you are new to this project: start with **Prerequisites** and **First time setup**, then run the app. Use **Backend packages** when you want to understand what each dependency does, and **Tasks** as your exercise list.
-
-You can find the solution code in the `solution-code` branch switch to it either in browser or by running: 
-`git checkout solution-code` in the terminal.
+This project has evolved from a simple library API to a full-featured management system with authentication, authorization, and advanced library operations.
 
 ---
 
@@ -73,14 +70,61 @@ npm run dev
 
 ## API endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET    | `/api/authors`  | List all authors |
-| POST   | `/api/authors`  | Create an author |
-| GET    | `/api/books`    | List all books (with author and genres) |
-| GET    | `/api/genres`   | List all genres |
-| POST   | `/api/books`    | To be added… |
-| more   | …               | To be added… |
+### Authentication
+| Method | Endpoint | Description | Authentication |
+|--------|----------|-------------|----------------|
+| POST   | `/api/auth/register` | Register new user | None |
+| POST   | `/api/auth/login` | User login | None |
+| POST   | `/api/auth/refresh` | Refresh access token | None |
+| POST   | `/api/auth/logout` | User logout | None |
+
+### Authors (Admin only for create/update/delete)
+| Method | Endpoint | Description | Authentication |
+|--------|----------|-------------|----------------|
+| GET    | `/api/authors` | List all authors | None |
+| GET    | `/api/authors/:id` | Get author by ID | None |
+| POST   | `/api/authors` | Create new author | Admin |
+| PUT    | `/api/authors/:id` | Update author | Admin |
+| DELETE | `/api/authors/:id` | Delete author | Admin |
+
+### Books (Admin only for create/update/delete)
+| Method | Endpoint | Description | Authentication |
+|--------|----------|-------------|----------------|
+| GET    | `/api/books` | List all books (with author and genres) | None |
+| GET    | `/api/books/:id` | Get book by ID | None |
+| POST   | `/api/books` | Create new book | Admin |
+| PUT    | `/api/books/:id` | Update book | Admin |
+| DELETE | `/api/books/:id` | Delete book | Admin |
+
+### Genres (Admin only for create/update/delete)
+| Method | Endpoint | Description | Authentication |
+|--------|----------|-------------|----------------|
+| GET    | `/api/genres` | List all genres | None |
+| GET    | `/api/genres/:id` | Get genre by ID | None |
+| POST   | `/api/genres` | Create new genre | Admin |
+| PUT    | `/api/genres/:id` | Update genre | Admin |
+| DELETE | `/api/genres/:id` | Delete genre | Admin |
+
+### Users (Admin only for get all/get by id)
+| Method | Endpoint | Description | Authentication |
+|--------|----------|-------------|----------------|
+| GET    | `/api/users` | List all users | Admin |
+| GET    | `/api/users/:id` | Get user by ID | Admin |
+| PUT    | `/api/users/:id` | Update user | Owner/Admin |
+| DELETE | `/api/users/:id` | Delete user | Owner/Admin |
+
+### Loans
+| Method | Endpoint | Description | Authentication |
+|--------|----------|-------------|----------------|
+| GET    | `/api/loans` | List all loans | Authenticated |
+| POST   | `/api/loans` | Create new loan | Authenticated |
+| PUT    | `/api/loans/:id` | Update loan | Authenticated |
+| DELETE | `/api/loans/:id` | Delete loan | Authenticated |
+
+### Admin Routes
+| Method | Endpoint | Description | Authentication |
+|--------|----------|-------------|----------------|
+| GET    | `/api/admin/stats` | Get system statistics | Admin |
 
 ---
 
@@ -88,6 +132,7 @@ npm run dev
 
 These are the npm packages the backend uses (see `package.json`):
 
+### Core Dependencies
 | Package     | Purpose |
 |------------|---------|
 | **express** | Web framework: routes, middleware, and serving the API and the static frontend. |
@@ -96,17 +141,34 @@ These are the npm packages the backend uses (see `package.json`):
 | **pg-hstore** | Converts data for PostgreSQL; required by Sequelize when using the `pg` dialect. |
 | **cors** | Lets the API be called from another origin (e.g. a different port or `frontend_external.html`). |
 
-**Dev dependency:**
+### Authentication & Security
+| Package     | Purpose |
+|------------|---------|
+| **bcryptjs** | Password hashing for secure user authentication. |
+| **jsonwebtoken** | JWT (JSON Web Tokens) for access token generation and verification. |
+| **helmet** | Security middleware to set various HTTP headers for protection. |
+| **express-rate-limit** | Rate limiting middleware to prevent brute force attacks. |
 
+### Validation & Environment
+| Package     | Purpose |
+|------------|---------|
+| **zod** | Schema validation for request bodies and parameters. |
+| **dotenv** | Environment variable management for configuration. |
+
+### Development Dependencies
 | Package   | Purpose |
 |----------|---------|
-| **nodemon** | Restarts the server when you change a file, so you don’t have to stop and start it yourself. Used when you run `npm run dev`. |
+| **nodemon** | Restarts the server when you change a file, so you don't have to stop and start it yourself. Used when you run `npm run dev`. |
 
 ### Where they are used
 
-- **server.js** – `express`, `path`, `cors`; and it loads `./sql/sequelize` and `./sql/models`.
-- **sql/sequelize.js** – creates the Sequelize instance (connection to the database).
-- **sql/** (authors, books, genres, bookGenres, models) – use `sequelize` (e.g. `DataTypes`, `define`) and require each other. Sequelize itself uses **pg** and **pg-hstore** when talking to PostgreSQL.
+- **server.js** – `express`, `path`, `cors`, `helmet`; and it loads `./config/sequelize` and `./models/models`.
+- **config/sequelize.js** – creates the Sequelize instance (connection to the database).
+- **models/** (authors, books, genres, bookGenres, Users, RefreshToken, Loan, etc.) – use `sequelize` (e.g. `DataTypes`, `define`) and require each other. Sequelize itself uses **pg** and **pg-hstore** when talking to PostgreSQL.
+- **middleware/auth.js** – uses `jsonwebtoken` for token verification.
+- **services/auth.service.js** – uses `bcryptjs`, `jsonwebtoken`, and `crypto` for authentication operations.
+- **controllers/** – handle HTTP requests and responses using `express`.
+- **middleware/validate.js** – uses `zod` for request validation.
 
 ---
 
@@ -122,36 +184,3 @@ These are the npm packages the backend uses (see `package.json`):
   Check `DB_USER` and `DB_PASSWORD`; they must match your PostgreSQL user.
 
 ---
-
-## Tasks
-
-- [ ] Add `Genres` and `BookGenres` models and associations
-    hint: When adding the associations, use the `onDelete: 'CASCADE'` option to ensure that when a book or genre is deleted, the corresponding rows in the junction table are also deleted.
-- [ ] Add a `Genres` API endpoint `GET /api/genres`
-
-
-- [ ] Add a `GET /api/books` endpoint to include the Author
-    hint: `include: [Authors]`
-- [ ] Add a `GET /api/books/:id` endpoint to get a single book
-    hint: `params: { id }`
-    hint 2: [Finding Records](https://sequelize.org/docs/v7/querying/select-in-depth/#applying-where-clauses)
-- [ ] Update the `GET /api/books` endpoint to include the Genres
-    hint: `include: [..., { model: Genres, through: { attributes: [] } }]`
-- [ ] Test the frontend to see if both genres and books are displayed properly
-
-- [ ] Add a `POST /api/books` endpoint to create a new book
-    hint: `body: { name, price, stock, author_id }`
-    hint 2: [Inserting Records](https://sequelize.org/docs/v7/querying/insert/#inserting-a-single-entity)
-    hint 2:  look at the `POST /api/authors` endpoint for inspiration
-    - [ ] Hard challange in the creation of the book add the genres that you take in from the `body: { ..., genres }` by creating a new `BookGenres` rows.
-        hint: [Inserting Associated Records](https://sequelize.org/docs/v7/querying/insert/#inserting-associated-records)
-
-- [ ] Test the frontend to see if the new book is created properly
-- [ ] Add a `PUT /api/books/:id` endpoint to update a book
-    hint: The update request is really just a `GET`and a `POST` request combined.
-    hint 2: [Updating Records](https://sequelize.org/docs/v7/querying/update/)
-    hint: `body: { name, price, stock, author_id }`
-    - [ ] Very Hard challange in the update of the book add the genres that you take in from the `body: { ..., genres }` by first deleting the existing genres and then adding the new ones.
-
-- [ ] Add a `DELETE /api/books/:id` endpoint to delete a book
-    hint: [Deleting Records](https://sequelize.org/docs/v7/querying/delete/)
