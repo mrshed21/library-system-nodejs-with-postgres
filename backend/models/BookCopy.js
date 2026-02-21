@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/sequelize");
-const Books = require("./books");
+const sequelize = require("../config/sequelize.config");
+const Books = require("./Books");
 const BookCopy = sequelize.define("BookCopy", {
     id: {
         type: DataTypes.INTEGER,

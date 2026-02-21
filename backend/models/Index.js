@@ -1,11 +1,11 @@
 const Authors = require('./authors');
-const Books = require('./books');
+const Books = require('./Books');
 const Genres = require('./genres');
 const BookGenres = require('./bookGenres');
 const Users = require('./Users');
 const RefreshToken = require('./RefreshToken');
 const FavoriteBooks = require('./FavoriteBooks');
-const BookCopy = require('./bookCopy');
+const BookCopy = require('./BookCopy');
 const Loan = require('./Loan'); 
 
 Books.belongsToMany(Genres, {

@@ -1,4 +1,4 @@
-const sequelize = require("../config/sequelize");
+const sequelize = require("../config/sequelize.config");
 
 
 //TODO implement the BookGenres model

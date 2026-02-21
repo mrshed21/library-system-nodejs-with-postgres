@@ -1,4 +1,4 @@
-const { Authors } = require('../models/models');
+const { Authors } = require('../models/Index');
 
 exports.getAuthors = async () => {
     const authors = await Authors.findAll();

@@ -1,4 +1,4 @@
-const { Users ,Books ,FavoriteBooks } = require("../models/models");
+const { Users ,Books ,FavoriteBooks } = require("../models/Index");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 

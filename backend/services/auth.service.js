@@ -1,4 +1,4 @@
-const { Users, RefreshToken } = require("../models/models");
+const { Users, RefreshToken } = require("../models/Index");
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");

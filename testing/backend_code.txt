@@ -1,0 +1,2635 @@
+========================================================================
+config\sequelize.config.js
+========================================================================
+
+const { Sequelize } = require("sequelize");
+const dotenv = require("dotenv");
+dotenv.config();
+
+const DB_NAME = process.env.DB_NAME || 'library_v7';
+const DB_USER = process.env.DB_USER || 'postgres';
+const DB_PASSWORD = process.env.DB_PASSWORD || 'postgres';
+const DB_HOST = process.env.DB_HOST || 'localhost';
+const DB_PORT = process.env.DB_PORT || 5432;
+
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+    host: DB_HOST,
+    port: DB_PORT,
+    dialect: 'postgres',
+});
+
+module.exports = sequelize;
+
+========================================================================
+controllers\auth.controller.js
+========================================================================
+
+const authService = require("../services/auth.service");
+const userService = require("../services/user.service");
+
+exports.createUser = async (req, res, next) => {
+  const { name, email, password } = req.body;
+  try {
+    const user = await authService.createUser({ name, email, password });
+
+    // send refresh by httponly
+    res.cookie("refreshToken", user.refreshTokenValue, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+      expires: user.expiresAt,
+    });
+
+    res.json({
+      success: true,
+      message: "User created successfully",
+      data: user.data,
+      token: user.token,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+exports.loginUser = async (req, res, next) => {
+  const { email, password } = req.body;
+  try {
+    const user = await authService.loginUser({ email, password });
+
+    // send refresh by httponly
+    res.cookie("refreshToken", user.refreshTokenValue, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+      expires: user.expiresAt,
+    });
+
+    res.json({
+      success: true,
+      message: "User created successfully",
+      data: user.data,
+      token: user.token,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.refreshToken = async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      const error = new Error("refresh token not found");
+      error.status = 401;
+      throw error;
+    }
+    const newAccessToken = await authService.refreshToken(refreshToken);
+
+    res.json({
+      success: true,
+      message: "Access token refreshed successfully",
+      token: newAccessToken,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+ exports.logoutUser = async (req, res, next) => {
+  try {
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) {
+      return res.status(400).json({
+        success: false,
+        message: 'No refresh token to logout'
+      });
+    }
+
+    await authService.logout(refreshToken);
+
+    
+    res.clearCookie('refreshToken');
+
+    res.json({
+      success: true,
+      message: 'Logged out successfully'
+    });
+  } catch (err) {
+    next(err);
+  }
+}; 
+
+
+exports.getMe = async (req ,res , next)=> {
+  try {
+    const userId = req.user.id
+
+    const user = await userService.getUserById(userId)
+
+    res.json({
+      success: true,
+      message: "User fetched successfully",
+      data: user,
+    })
+  } catch (error) {
+    next (error)
+  }
+}
+
+exports.updateUser = async (req , res ,next) => {
+  try {
+    const userId = req.user.id
+
+    const updatedUser = await authService.updateUser(userId , req.body)
+
+    res.json({
+      success: true,
+      message: "User updated successfully",
+      data: updatedUser,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+========================================================================
+controllers\author.controller.js
+========================================================================
+
+const authorService = require('../services/authors.service');
+
+// get all authors
+exports.getAuthors = async (req, res, next) => {
+    try {
+        const authors = await authorService.getAuthors();
+        res.json(authors);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// get author by id
+exports.getAuthorById = async (req, res, next) => {
+    try {
+        const author = await authorService.getAuthorById(req.params.id);
+        res.json(author);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// create author
+exports.createAuthor = async (req, res, next) => {
+    const { name, year_of_birth } = req.body;
+    if(!name || !year_of_birth) {
+        const error = new Error('Name and year of birth are required');
+        error.statusCode = 400;
+        throw error;
+    }
+    try {
+        const author = await authorService.createAuthor(req.body);
+        res.json(author);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// update author
+exports.updateAuthor = async (req, res, next) => {
+    try {
+        const author = await authorService.updateAuthor(req.params.id, req.body);
+        res.json(author);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// delete author
+exports.deleteAuthor = async (req, res, next) => {
+    try {
+        const author = await authorService.deleteAuthor(req.params.id);
+        res.json(author);
+    } catch (error) {
+        next(error);
+    }
+};
+
+========================================================================
+controllers\book.controller.js
+========================================================================
+
+const bookService = require('../services/book.service');
+
+exports.getBooks = async (req, res, next) => {
+    try {
+
+        const books = await bookService.getBooks(req.query);
+        res.json(books);
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.getBookById = async (req, res   , next) => {
+    try {
+        const book = await bookService.getBookById(req.params.id);
+        res.json(book);
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.createBook = async (req, res, next) => {
+    try {
+    const { name, price,  author_id, genre_ids } = req.body;
+    
+    const book = await bookService.createBook({ name, price,  author_id, genre_ids });
+    
+    res.json(book); 
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+exports.updateBook = async (req , res, next) => {
+    try {
+        const { id } = req.params;
+        const { bookData } = req.body;
+        const updatedBook = await bookService.updateBook(id, bookData);
+        res.json({ success: true, message: 'Book updated', data: updatedBook });
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.deleteBook = async (req ,res , next) => {
+    try {
+            const { id } = req.params;
+            const deletedBook = await bookService.deleteBook(id);
+            res.json({ success: true, message: 'Book deleted', data: deletedBook });
+    } catch (error) {
+        next(error)
+    }
+}
+
+========================================================================
+controllers\bookCopy.controller.js
+========================================================================
+
+const bookCopyService = require('../services/bookCopy.service');
+
+
+exports.getAllBookCopiesWithBook = async (req, res, next) => {
+    try {
+        const limit = parseInt(req.query.limit) || 10;
+        const offset = parseInt(req.query.offset) || 0;
+        const bookCopies = await bookCopyService.getAllBookCopiesWithBook(limit, offset);
+        res.json({
+            success: true , 
+            message: 'bookCopies fetched successfully',
+            data: bookCopies.bookCopy,
+            meta: {
+                limit,
+                offset,
+                total: bookCopies.count
+            }
+
+        });
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.getBookCopyById = async (req, res   , next) => {
+    try {
+        const bookCopy = await bookCopyService.getBookCopyById(req.params.id);
+        res.json({
+            success: true , 
+            message: 'bookCopy fetched successfully',
+            data: bookCopy
+        });
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.createBookCopy = async (req, res, next) => {
+    try {
+    const { book_id, conditionStatus, shelfLocation } = req.body;
+    
+    const bookCopy = await bookCopyService.createBookCopy({ book_id, conditionStatus, shelfLocation });
+    
+    res.json({ success: true, message: 'BookCopy created', data: bookCopy }); 
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+exports.updateBookCopy = async (req , res, next) => {
+    try {
+        const { id } = req.params;
+        const { book_id, conditionStatus, shelfLocation } = req.body;
+        const updatedBookCopy = await bookCopyService.updateBookCopy(id, { book_id, conditionStatus, shelfLocation });
+        res.json({ success: true, message: 'BookCopy updated', data: updatedBookCopy     });
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.deleteBookCopy = async (req ,res , next) => {
+    try {
+            const { id } = req.params;
+            const deletedBookCopy = await bookCopyService.deleteBookCopy(id);
+            res.json({ success: true, message: 'BookCopy deleted', data: deletedBookCopy });
+    } catch (error) {
+        next(error)
+    }
+}
+
+========================================================================
+controllers\genre.controller.js
+========================================================================
+
+const genreService = require('../services/genre.service');
+
+
+exports.getGenres = async (req ,res ,next ) => {
+    try {
+        const genres = await genreService.getGenres();
+        res.json({
+            success: true,
+            message: 'Genres fetched successfully',
+            data: genres
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+exports.getGenreById = async (req , res , next) => {
+    try {
+        const { id } = req.params;
+        const genre = await genreService.getGenreById(id);
+        res.json({
+            success: true,
+            message: 'Genre fetched successfully',
+            data: genre
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+exports.createGenre = async (req, res , next) => {
+    const { name } = req.body;
+    try {
+        const newGenre = await genreService.createGenre(name);
+        res.status(201).json({
+            success: true,
+            message: 'Genre created successfully',
+            data: newGenre
+        });
+    } catch (error) {
+        console.error('Error creating genre:', error);
+    next(error);
+    }
+
+}
+
+exports.updateGenre = async (req, res , next) => {
+    const { id} = req.params;
+    try {
+        const updatedGenre = await genreService.updateGenre(id, req.body.name);
+        res.json({
+            success: true,
+            message: 'Genre updated successfully',
+            data: updatedGenre
+        });
+
+
+    } catch (error) {
+        console.error('Error updating genre:', error);
+        next(error);
+        
+    }
+}
+
+exports.deleteGenre = async (req, res , next) => {
+    try {
+    const { id } = req.params;
+    const deletedGenre = await genreService.deleteGenre(id);
+    res.json({
+        success: true,
+        message: 'Genre deleted successfully',
+        data: deletedGenre
+    });
+    } catch (error) {
+        console.error('Error deleting genre:', error);
+        next(error);
+    }
+}
+
+========================================================================
+controllers\loan.controller.js
+========================================================================
+
+const loanService = require("../services/loan.service");
+
+exports.createLoan = async (req, res, next) => {
+  try {
+    const user_id = req.user.id;
+    const loan = await loanService.createLoan(user_id, req.body.book_id);
+    res.json({ success: true, message: "Loan created", data: loan });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.returnLoan = async (req , res ,next) => {
+    try {
+        const user_id = req.user.id;
+        const loan_id = req.params.id;
+        const loan = await loanService.returnLoan(user_id , loan_id);
+        res.json({ success: true, message: "Loan returned", data: loan });
+    } catch (error) {
+        next(error);
+    }
+}
+
+exports.showUserLoans = async (req, res, next) => {
+  try {
+    const user_id = req.user.id;
+    const loans = await loanService.showUserLoans(user_id);
+    res.json({ success: true, data: loans });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.showUserLoanById = async (req, res, next) => {
+  try {
+    const user_id = req.user.id;
+    const loan = await loanService.showUserLoanById(user_id, req.params.id);
+    res.json({ success: true, data: loan });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// admin controller
+exports.showAllLoans = async (req, res, next) => {
+  try {
+    const loans = await loanService.showAllLoans();
+    res.json({ success: true, data: loans });
+  } catch (error) {
+    next(error);
+  }
+};
+exports.showLoanById = async (req, res, next) => {
+  try {
+    const loan = await loanService.showLoanById(req.params.id);
+    res.json({ success: true, data: loan });
+  } catch (error) {
+    next(error);
+  }
+};
+
+========================================================================
+controllers\user.controller.js
+========================================================================
+
+const userService = require('../services/user.service');
+
+exports.getUsers = async (req, res, next) => {
+    try {
+        const users = await userService.getUsers();
+        res.json(users);
+    } catch (error) {
+        next(error);
+    }
+};
+exports.getUserById = async (req, res, next) => {
+    try {
+        const user = await userService.getUserById(req.params.id);
+        res.json(user);
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.updateUser = async (req, res, next) => {
+    try {
+        const user = await userService.updateUser(req.params.id, req.body);
+        res.json(user);
+    } catch (error) {
+        next(error);
+    }
+};
+exports.deleteUser = async (req, res, next) => {
+    try {
+        const user = await userService.deleteUser(req.params.id);
+        res.json(user);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+exports.getFavoriteBooks = async (req, res, next) => {
+    try {
+        const favoriteBooks = await userService.getFavoriteBooks(req.user.id);
+        res.json({
+            success: true,
+            message: 'Favorite books fetched successfully',
+            count: favoriteBooks?.length || 0,
+            data: favoriteBooks
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.addFavoriteBook = async (req, res, next) => {
+    try {
+        const { book_id } = req.body;   
+        if (!book_id) {
+            const error = new Error('Book ID is required');
+            error.status = 400;
+            throw error;
+        }
+        const favoriteBook = await userService.addFavoriteBook(req.user.id, book_id);
+        
+        res.json({
+            success: true,
+            message: 'Favorite book added successfully',
+            data:  favoriteBook 
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.deleteFavoriteBook = async (req, res, next) => {
+    try {
+        const bookId = req.params.bookId;
+        if (!bookId) {
+            const error = new Error('Book ID is required');
+            error.status = 400;
+            throw error;
+        }
+        const deletedFavoriteBook = await userService.deleteFavoriteBook(req.user.id, bookId);
+        res.json({
+            success: true,
+            message: 'Favorite book deleted successfully',
+            data: { message: 'Favorite book deleted successfully' }
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+========================================================================
+middleware\auth.js
+========================================================================
+
+const jwt = require('jsonwebtoken');
+
+
+exports.authMiddleware = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        const error = new Error('No token found');
+        error.status = 401;
+        throw error;
+    }
+    const token = authHeader.split(' ')[1]; 
+    if (!token) {
+        const error = new Error('invalid token format');
+        error.status = 401;
+        throw error;
+    }
+    try {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decodedToken 
+        next();
+    } catch (err) {
+        const error = new Error(' token invalid or expired');
+        error.status = 401;
+        throw error;
+    }
+}
+
+exports.adminonly =(req , res , next) => {
+    if (req.user.role !== "admin") {
+        return res.status(403).json({
+            success: false,
+            message: 'Access denied'
+        });
+    }
+    next();
+}
+
+========================================================================
+middleware\checkOwnershipOrAdmin.js
+========================================================================
+
+exports.checkOwnershipOrAdmin = (req, res, next) => {
+  const userIdFromToken = req.user.id;     
+  const userRole = req.user.role;
+  const userIdFromParams = req.params.id;  
+
+  if (userRole === 'admin') {
+    return next();
+  }
+
+  if (userIdFromToken == userIdFromParams) {
+    return next();
+  }
+
+  return res.status(403).json({
+    success: false,
+    message: 'Access denied: you can only modify your own account'
+  });
+};
+
+========================================================================
+middleware\errorHandler.js
+========================================================================
+
+// Error handler middleware
+const errorHandler = (err, req, res, next) => {
+  console.error(err); // Log the error
+
+
+  // Sequelize Unique constraint error  
+  if (err.name === "SequelizeUniqueConstraintError") {
+    const field = err.errors[0]?.path; // First field causing the problem
+    return res.status(400).json({
+      success: false,
+      message: `${field} must be unique`
+    });
+  }
+
+  // If Zod error
+  if (err.errors && Array.isArray(err.errors)) {
+    return res.status(400).json({
+      success: false,
+      message: err.errors.map(e => e.message).join(", ")
+    });
+  }
+
+  // general errors
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error"
+  });
+
+
+
+};
+
+module.exports = errorHandler;
+
+========================================================================
+middleware\idParamValidation.js
+========================================================================
+
+
+
+const validateId = (req, res, next) => {
+  const { id } = req.params;
+  if (!id || isNaN(id)) {
+    const err = new Error("Invalid ID");
+    err.status = 400;
+    return next(err);
+  }
+  next();
+};
+
+
+module.exports = { validateId };
+
+========================================================================
+middleware\limiter.js
+========================================================================
+
+const limiter = require('express-rate-limit');
+
+exports.loginLimiter =  limiter({
+    windowMs: 15 * 60 * 1000, 
+    max: 5, 
+    handler: (req, res, next) => {
+        const error = new Error('Too many login attempts from this IP, please try again after 15 minutes');
+        error.status = 429;
+        next(error);
+    }
+});
+
+exports.refreshLimiter = limiter({
+    windowMs : 60 * 60 * 1000,
+    max : 10 , 
+    keyGenerator: (req) => {
+        if (req.user && req.user.id) return req.user.id;
+        return req.ip; // fallback
+    },
+    handler: (req, res, next) => {
+    const error = new Error("Too many refresh requests");
+    error.status = 429;
+    next(error);
+    }
+});
+
+
+exports.defaultLimiter = limiter({
+    windowMs: 15 * 60 * 1000, 
+    max: 100,   
+    handler: (req, res, next) => {
+        const error = new Error('Too many requests from this IP, please try again after 15 minutes');
+        error.status = 429;
+        next(error);
+    }
+})
+
+========================================================================
+middleware\validate.js
+========================================================================
+
+const { ZodError } = require("zod");
+
+const validate = (schema, property = "body") => (req, res, next) => {
+  try {
+    schema.parse(req[property]);
+    next();
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return res.status(400).json({
+        success: false,
+        errors: err.errors,
+        message: "Validation error",
+      });
+    }
+    next(err);
+  }
+};
+
+module.exports = validate;
+
+========================================================================
+models\Authors.js
+========================================================================
+
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/sequelize.config');
+
+const Authors = sequelize.define('Authors', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        
+    },
+    year_of_birth: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+}, {
+    tableName: 'Authors',
+    timestamps: true,
+});
+
+module.exports = Authors;
+
+========================================================================
+models\BookCopy.js
+========================================================================
+
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/sequelize.config");
+const Books = require("./Books");
+const BookCopy = sequelize.define("BookCopy", {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    book_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Books,
+            key: "id",
+        },
+        onDelete: "CASCADE",
+    },
+    conditionStatus: {
+        type: DataTypes.ENUM('BORROWED', 'AVAILABLE', 'DAMAGED', 'LOST'),
+        allowNull: false,
+        defaultValue: 'AVAILABLE',
+      },
+      shelfLocation: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+  
+},
+    {
+        tableName: "book_copies",
+        timestamps: true,
+    }
+);
+
+Books.hasMany(BookCopy, { foreignKey: 'book_id', onDelete: 'CASCADE' });
+
+module.exports = BookCopy;
+
+========================================================================
+models\BookGenres.js
+========================================================================
+
+const sequelize = require("../config/sequelize.config");
+
+
+//TODO implement the BookGenres model
+
+const BookGenre = sequelize.define(
+  "book_genre",
+   {},
+  {
+    tableName: "book_genres",
+    timestamps: false
+  }
+);
+
+module.exports = BookGenre;
+
+========================================================================
+models\Books.js
+========================================================================
+
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/sequelize.config");
+const Authors = require("./authors");
+
+const Books = sequelize.define(
+  "Books",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      require: true,
+      
+    },
+    price: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      require: true,
+    },
+    author_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Authors,
+        key: "id",
+      },
+    },
+  },
+  {
+    tableName: "Books",
+    timestamps: true,
+  },
+);
+
+Books.belongsTo(Authors, { foreignKey: "author_id", onDelete: "CASCADE" });
+Authors.hasMany(Books, { foreignKey: "author_id" });
+
+module.exports = Books;
+
+========================================================================
+models\FavoriteBooks.js
+========================================================================
+
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/sequelize.config");
+const Users = require("./Users");
+const Books = require("./Books");
+
+const FavoriteBooks = sequelize.define(
+  "FavoriteBooks",
+  {
+   
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    book_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  {
+    indexes: [{ unique: true, fields: ["user_id", "book_id"] }], 
+  },
+);
+
+
+
+module.exports = FavoriteBooks;
+
+========================================================================
+models\Genres.js
+========================================================================
+
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/sequelize.config');
+
+//TODO implement the Genres model
+const Genres = sequelize.define('Genres', {
+ id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+ },
+ name: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false,
+ },
+ createdAt : {
+    type: DataTypes.DATE,
+    allowNull: false,
+ },
+ updatedAt : {
+    type: DataTypes.DATE,
+    allowNull: false,
+ },
+},
+{
+    tableName: 'Genres',
+    timestamps: true,
+   
+}
+)
+
+module.exports = Genres;
+
+========================================================================
+models\Index.js
+========================================================================
+
+const Authors = require('./authors');
+const Books = require('./Books');
+const Genres = require('./genres');
+const BookGenres = require('./bookGenres');
+const Users = require('./Users');
+const RefreshToken = require('./RefreshToken');
+const FavoriteBooks = require('./FavoriteBooks');
+const BookCopy = require('./BookCopy');
+const Loan = require('./Loan'); 
+
+Books.belongsToMany(Genres, {
+  through: BookGenres,
+  foreignKey: "book_id",
+  otherKey: "genre_id"
+});
+
+Genres.belongsToMany(Books, {
+  through: BookGenres,
+  foreignKey: "genre_id",
+  otherKey: "book_id"
+});
+
+Users.belongsToMany(Books, { through: FavoriteBooks, as: 'Favorites' ,foreignKey: 'user_id'});
+Books.belongsToMany(Users, { through: FavoriteBooks, as: 'FavoredBy' ,foreignKey: 'book_id'});
+
+BookCopy.belongsTo(Books, { foreignKey: 'book_id', onDelete: 'CASCADE' });
+Books.hasMany(BookCopy, { foreignKey: 'book_id', onDelete: 'CASCADE' });
+
+
+
+Loan.belongsTo(Users, { foreignKey: "user_id", onDelete: "CASCADE" });
+Users.hasMany(Loan, { foreignKey: "user_id" });
+
+Loan.belongsTo(BookCopy, { foreignKey: "book_copy_id", onDelete: "CASCADE" });
+BookCopy.hasMany(Loan, { foreignKey: "book_copy_id" });
+
+
+
+
+const models = {
+    Authors,
+    Books,
+    Genres,
+    BookGenres,
+    Users,
+    RefreshToken,
+    FavoriteBooks,
+    BookCopy,
+    Loan
+};
+
+module.exports = models;
+
+========================================================================
+models\Loan.js
+========================================================================
+
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/sequelize.config");
+const { Users, BookCopy } = require("./Index");
+const { id } = require("zod/locales");
+
+const Loan = sequelize.define(
+  "Loan",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Users,
+        key: "id",
+      },
+      onDelete: "CASCADE",
+    },
+    book_copy_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: BookCopy,
+        key: "id",
+      },
+      onDelete: "CASCADE",
+    },
+    status: {
+      type: DataTypes.ENUM("borrowed", "returned", "overdue"),
+      allowNull: false,
+      defaultValue: "borrowed",
+    },
+    borrowDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    dueDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    returnDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    fine: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+      defaultValue: 0,
+    },
+  },
+  {
+    tableName: "loans",
+    timestamps: true,
+  },
+);
+
+
+
+
+module.exports = Loan;
+
+========================================================================
+models\Loans.js
+========================================================================
+
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/sequelize.config");
+const Users = require("./Users");
+const BookCopy = require("./BookCopy");
+
+const Loan = sequelize.define(
+  "Loan",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Users,
+        key: "id",
+      },
+      onDelete: "CASCADE",
+    },
+    book_copy_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: BookCopy,
+        key: "id",
+      },
+      onDelete: "CASCADE",
+    },
+    status: {
+      type: DataTypes.ENUM("borrowed", "returned", "overdue"),
+      allowNull: false,
+      defaultValue: "borrowed",
+    },
+    borrowDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    dueDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    returnDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    fine: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+      defaultValue: 0,
+    },
+  },
+  {
+    tableName: "loans",
+    timestamps: true,
+  },
+);
+
+
+
+
+module.exports = Loan;
+
+========================================================================
+models\RefreshToken.js
+========================================================================
+
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/sequelize.config');
+const Users = require('./Users');
+const RefreshToken = sequelize.define('RefreshToken', {
+    token: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    expiresAt: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    user_id : {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Users,
+            key: "id"
+        }
+    }
+}, {
+    tableName: 'refresh_tokens',
+    timestamps: true
+});
+
+Users.hasMany(RefreshToken, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+RefreshToken.belongsTo(Users, { foreignKey: 'user_id' });
+
+module.exports = RefreshToken;
+
+========================================================================
+models\Users.js
+========================================================================
+
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/sequelize.config');
+
+const Users = sequelize.define('Users', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false , 
+        required: true , 
+        unique: true
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    role: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'user'
+    }, 
+    isActive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    }
+},
+    {
+        tableName: 'users',
+        timestamps: true
+    }
+);
+
+module.exports = Users;
+
+========================================================================
+routes\admin.routes.js
+========================================================================
+
+const express = require('express');
+const { validateId } = require('../middleware/idParamValidation');
+const router = express.Router();
+const bookController = require('../controllers/book.controller');
+const bookCopyController = require('../controllers/bookCopy.controller');
+
+const validate = require('../middleware/validate');
+const { createBookSchema, updateBookSchema } = require('../schemas/book.schema');
+const { createBookCopySchema, updateBookCopySchema } = require('../schemas/bookCopy.schema');
+
+// create book
+router.post('/books', validate(createBookSchema), bookController.createBook)
+
+// update book
+router.put('/books/:id', validateId, validate(updateBookSchema), bookController.updateBook)
+
+// delete book
+router.delete('/books/:id', validateId, bookController.deleteBook)
+
+
+// create book copy
+router.post('/book-copies', validate(createBookCopySchema), bookCopyController.createBookCopy)
+
+// update book copy
+router.put('/book-copies/:id', validateId, validate(updateBookCopySchema), bookCopyController.updateBookCopy)
+
+// delete book copy
+router.delete('/book-copies/:id', validateId, bookCopyController.deleteBookCopy)
+
+
+// get all book copies
+router.get('/book-copies', bookCopyController.getAllBookCopiesWithBook)
+
+// get book copy by id
+router.get('/book-copies/:id', validateId,  bookCopyController.getBookCopyById )
+
+
+module.exports = router;
+
+========================================================================
+routes\auth.routes.js
+========================================================================
+
+const express = require('express');
+const router = express.Router();
+
+const { loginUserSchema } = require('../schemas/user.schema');
+const { createUserSchema } = require('../schemas/user.schema');
+
+const validate = require('../middleware/validate');
+const authController = require('../controllers/auth.controller');
+const { authMiddleware } = require('../middleware/auth');
+const { loginLimiter } = require('../middleware/limiter');
+
+
+
+// create user
+router.post('/auth/register', validate(createUserSchema), authController.createUser);
+
+
+
+// login user
+router.post('/auth/login',loginLimiter, validate(loginUserSchema), authController.loginUser);
+
+
+// me
+router.get('/auth/me',authMiddleware, authController.getMe);
+
+
+// update user
+router.put('/auth/me',authMiddleware, authController.updateUser);
+
+
+// refresh token
+router.post('/auth/refresh', authController.refreshToken);
+
+// logout user
+router.post('/auth/logout', authController.logoutUser);
+
+module.exports = router;
+
+========================================================================
+routes\authors.routes.js
+========================================================================
+
+const express = require('express');
+const router = express.Router();
+
+
+const validate = require('../middleware/validate');
+const { validateId } = require('../middleware/idParamValidation');
+
+
+const { createAuthorSchema, updateAuthorSchema } = require('../schemas/author.schema');
+
+const { authMiddleware ,adminonly } = require('../middleware/auth');
+
+
+const authorController = require('../controllers/author.controller');
+
+// get all authors
+router.get('/authors', authorController.getAuthors);
+
+// get author by id
+router.get('/authors/:id', validateId, authorController.getAuthorById);
+
+// create author
+router.post('/authors',authMiddleware,adminonly, validate(createAuthorSchema), authorController.createAuthor);
+
+// update author
+router.put('/authors/:id',authMiddleware,adminonly, validateId, validate(updateAuthorSchema), authorController.updateAuthor);
+
+// delete author
+router.delete('/authors/:id',authMiddleware,adminonly, validateId, authorController.deleteAuthor);
+
+module.exports = router;
+
+========================================================================
+routes\books.routes.js
+========================================================================
+
+const express = require('express');
+const router = express.Router();
+
+const {  validateId } = require('../middleware/idParamValidation');
+const bookController = require('../controllers/book.controller');
+
+
+// get all books
+router.get('/books', bookController.getBooks);
+
+// get book by id
+router.get('/books/:id', validateId,  bookController.getBookById )
+
+
+
+
+module.exports = router;
+
+========================================================================
+routes\genres.routes.js
+========================================================================
+
+const express = require('express');
+const router = express.Router();
+
+const { validateId } = require('../middleware/idParamValidation');
+const validate = require('../middleware/validate');
+const { createGenreSchema, updateGenreSchema } = require('../schemas/genre.schema');
+
+const { authMiddleware ,adminonly } = require('../middleware/auth');
+
+
+
+const genreController = require('../controllers/genre.controller');
+
+// Get all genres
+router.get('/genres', genreController.getGenres );
+
+// get genre by id
+router.get('/genres/:id', validateId, genreController.getGenreById);
+
+// create new genre
+router.post('/genres',authMiddleware,adminonly, validate(createGenreSchema), genreController.createGenre);
+
+// update genre by id
+router.put('/genres/:id',authMiddleware,adminonly, validateId, validate(updateGenreSchema), genreController.updateGenre);
+
+// delete genre by id
+router.delete('/genres/:id',authMiddleware,adminonly, validateId, genreController.deleteGenre);
+
+module.exports = router;
+
+========================================================================
+routes\loanRoute.routes.js
+========================================================================
+
+const express = require("express");
+const router = express.Router();
+const loanController = require("../controllers/loan.controller");
+const { createLoanSchema } = require("../schemas/loan.schema");
+const { authMiddleware, adminonly } = require("../middleware/auth");
+const validate = require("../middleware/validate");
+
+
+
+
+// create loan
+router.post("/user/loan",authMiddleware,  loanController.createLoan);
+
+// return loan
+router.put("/user/loan/:id",authMiddleware, loanController.returnLoan);
+
+// get all user loans
+router.get("/user/loans",authMiddleware, loanController.showUserLoans);
+
+// get user loan by id
+router.get("/user/loan/:id",authMiddleware, loanController.showUserLoanById);
+
+
+
+
+
+// --------------- admin routes --------------- //
+// show all loans
+router.get("/admin/loans",authMiddleware,adminonly, loanController.showAllLoans);
+
+// show loan by id
+router.get("/admin/loan/:id",authMiddleware,adminonly, loanController.showLoanById);
+
+
+
+
+
+
+
+
+
+
+
+module.exports = router;
+
+========================================================================
+routes\users.routes.js
+========================================================================
+
+const express = require('express');
+const router = express.Router();
+
+const { validateId } = require('../middleware/idParamValidation');
+const userController = require('../controllers/user.controller');
+
+const validate = require('../middleware/validate');
+const { createUserSchema, updateUserSchema } = require('../schemas/user.schema');
+const { createFavoriteBookSchema } = require('../schemas/favoriteBook.schema');
+const { authMiddleware, adminonly } = require('../middleware/auth');
+
+const { checkOwnershipOrAdmin } = require('../middleware/checkOwnershipOrAdmin');
+
+// get all users
+router.get('/users',authMiddleware, adminonly, userController.getUsers);
+
+// get user by id
+router.get('/users/:id',authMiddleware,adminonly ,  validateId, userController.getUserById);
+
+
+
+// update user
+router.put('/users/:id',authMiddleware, checkOwnershipOrAdmin, validateId, validate(updateUserSchema), userController.updateUser);
+
+// delete user
+router.delete('/users/:id',authMiddleware, checkOwnershipOrAdmin, validateId, userController.deleteUser);
+
+
+
+// favorite book
+router.get('/users/me/favorite-books',authMiddleware, userController.getFavoriteBooks);
+
+router.post('/users/me/favorite-books',authMiddleware,validate(createFavoriteBookSchema), userController.addFavoriteBook);
+
+
+router.delete('/users/me/favorite-books/:bookId',authMiddleware, userController.deleteFavoriteBook); 
+
+module.exports = router;
+
+========================================================================
+schemas\author.schema.js
+========================================================================
+
+const { z } = require("zod");
+
+exports.createAuthorSchema = z.object({
+  name: z.string({
+    required_error: "Author name is required",
+  }).min(1, "Author name cannot be empty"),
+
+  year_of_birth: z.number({
+    required_error: "Year of birth is required",
+  }).int("Year of birth must be an integer").positive("Year of birth must be positive"),
+});
+
+exports.updateAuthorSchema = exports.createAuthorSchema.partial();
+
+========================================================================
+schemas\book.schema.js
+========================================================================
+
+const { z } = require("zod");
+
+exports.createBookSchema = z.object({
+  name: z.string({
+    required_error: "Book name is required",
+  }).min(1, "Book name cannot be empty"),
+
+  price: z.number({
+    required_error: "Price is required",
+  }).positive("Price must be positive"),
+
+  genre_ids: z.array(z.number({
+    required_error: "Genre IDs are required",
+  })).min(1, "At least one genre is required"),
+  author_id: z.number({
+    required_error: "Author ID is required",
+  }).int("Author ID must be an integer").positive("Author ID must be positive"),
+});
+
+exports.updateBookSchema = exports.createBookSchema.partial();
+
+========================================================================
+schemas\bookCopy.schema.js
+========================================================================
+
+const { z } = require("zod");
+
+exports.createBookCopySchema = z.object({
+    book_id: z.number({
+        required_error: "Book ID is required",
+    }).int("Book ID must be an integer").positive("Book ID must be positive"),
+    conditionStatus: z.enum(["AVAILABLE", "DAMAGED", "LOST"]).default("AVAILABLE"),
+    shelfLocation: z.string().optional(),
+});
+
+exports.updateBookCopySchema = exports.createBookCopySchema.partial();
+
+========================================================================
+schemas\favoriteBook.schema.js
+========================================================================
+
+const { z } = require("zod");
+
+exports.createFavoriteBookSchema = z.object({
+  book_id: z.number({
+    required_error: "Book ID is required",
+  }).int("Book ID must be an integer").positive("Book ID must be positive"),
+});
+
+========================================================================
+schemas\genre.schema.js
+========================================================================
+
+const { z } = require("zod");
+
+exports.createGenreSchema = z.object({
+  name: z.string({
+    required_error: "Genre name is required",
+  }).min(1, "Genre name cannot be empty"),
+});
+
+exports.updateGenreSchema = exports.createGenreSchema.partial();
+
+========================================================================
+schemas\loan.schema.js
+========================================================================
+
+const { z } = require("zod");
+
+exports.createLoanSchema = z.object({
+  user_id: z
+    .number({
+      required_error: "User ID is required",
+    })
+    .int("User ID must be an integer")
+    .positive("User ID must be positive"),
+
+  book_copy_id: z
+    .number({
+      required_error: "Book copy ID is required",
+    })
+    .int("Book copy ID must be an integer")
+    .positive("Book copy ID must be positive"),
+
+  borrowDate: z.date().optional(),
+
+  dueDate: z.date({
+    required_error: "Due date is required",
+  }).optional(),
+
+  status: z.enum(["borrowed", "returned", "overdue"]).optional(),
+
+  fine: z.number().optional(),
+});
+
+
+exports.updateLoanSchema = z.object({
+  status: z.enum(["borrowed", "returned", "overdue"]).optional(),
+  returnDate: z.date().optional(),
+  fine: z.number().optional(),
+  dueDate: z.date().optional(),
+}).partial();
+
+========================================================================
+schemas\user.schema.js
+========================================================================
+
+const { z } = require("zod");
+
+exports.createUserSchema = z.object({
+  name: z.string().min(1, "User name is required"),
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  role: z.enum(["user", "admin"]).default("user"),
+});
+
+
+exports.updateUserSchema = z.object({
+  name: z.string().min(1).optional(),
+  email: z.string().email().optional()
+});
+
+
+
+
+exports.loginUserSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6)
+});
+
+
+
+
+
+
+exports.changePasswordSchema = z.object({
+  oldPassword: z.string().min(6),
+  newPassword: z.string().min(6)
+});
+
+========================================================================
+server.js
+========================================================================
+
+const express = require('express');
+require('dotenv').config();
+const path = require('path');
+const cors = require('cors');
+const app = express();
+const port = process.env.PORT || 3000;
+const sequelize = require('./config/sequelize.config');
+const helmet = require('helmet');
+
+const { defaultLimiter } = require('./middleware/limiter');
+
+
+
+const authorsRouter = require('./routes/authors.routes');
+const booksRouter = require('./routes/books.routes');
+const genresRouter = require('./routes/genres.routes');
+const usersRouter = require('./routes/users.routes');
+const authRouter = require('./routes/auth.routes');
+const adminRouter = require('./routes/admin.routes');
+const loanRouter = require('./routes/loanRoute.routes');
+
+const errorHandler = require('./middleware/errorHandler');        
+const { authMiddleware,adminonly } = require('./middleware/auth');
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'frontend')));
+app.use(helmet());
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
+
+
+
+app.use('/api', defaultLimiter);
+app.use('/api', booksRouter);
+app.use('/api', authorsRouter);
+app.use('/api', genresRouter);
+app.use('/api', usersRouter);
+app.use('/api', loanRouter);
+
+
+
+app.use('/api/admin',authMiddleware, adminonly, adminRouter);
+
+
+
+app.use('/api', authRouter);
+
+
+
+
+app.use((req, res, next) => {
+    const error = new Error(`Route ${req.originalUrl} not found`);
+    error.status = 404;
+    next(error);
+});
+
+
+app.use(errorHandler);
+
+
+
+app.listen(port, () => {
+    sequelize.authenticate()
+    .then(() => {
+        sequelize.sync()
+        .then(() => {
+            console.log('Database and tables created!');
+        })
+        .catch((error) => {
+            console.error('Error syncing database:', error);
+        });
+    })
+    .catch((error) => {
+        console.error('Unable to connect to the database or sync tables:', error);
+    });
+});
+
+========================================================================
+services\auth.service.js
+========================================================================
+
+const { Users, RefreshToken } = require("../models/Index");
+const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+// create user
+exports.createUser = async (user) => {
+  
+  const hashedPassword = await bcrypt.hash(user.password, 10);
+  const newUser = await Users.create({
+    ...user,
+    password: hashedPassword,
+  });
+
+  const { id, name, email, role, isActive } = newUser;
+
+  const token = jwt.sign(
+    { id: id, role: role, email: email },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" },
+  );
+
+  // generate refresh token
+  const refreshTokenValue = crypto.randomBytes(64).toString("hex");
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+  await RefreshToken.create({
+    token: refreshTokenValue,
+    expiresAt,
+    user_id: newUser.id,
+  });
+
+  return {
+    data: { id, name, email, role, isActive },
+    token,
+    refreshTokenValue,
+    expiresAt,
+  };
+};
+
+// login user
+exports.loginUser = async (user) => {
+  const { email, password } = user;
+
+  const existingUser = await Users.findOne({
+    where: {
+      email: email,
+    },
+    attributes: [
+      "id",
+      "name",
+      "email",
+      "password",
+      "role",
+      "isActive",
+      "createdAt",
+      "updatedAt",
+    ],
+  });
+
+  if (!existingUser) {
+    const error = new Error("Invalid username or password");
+    error.status = 401;
+    throw error;
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+  if (!isPasswordValid) {
+    const error = new Error("Invalid username or password");
+    error.status = 401;
+    throw error;
+  }
+
+  const userData = {
+    id: existingUser.id,
+    name: existingUser.name,
+    email: existingUser.email,
+    role: existingUser.role,
+    isActive: existingUser.isActive,
+  };
+
+  // generate access token
+  const token = jwt.sign(
+    { id: existingUser.id, role: existingUser.role, email: existingUser.email },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" },
+  );
+
+  // generate refresh token
+  const refreshTokenValue = crypto.randomBytes(64).toString("hex");
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+  await RefreshToken.create({
+    token: refreshTokenValue,
+    expiresAt,
+    user_id: existingUser.id,
+  });
+
+  return {
+    data: userData,
+    token,
+    refreshTokenValue,
+    expiresAt,
+  };
+};
+
+// refresh token
+exports.refreshAccessToken = async (refreshTokenValue) => {
+  const dbToken = await RefreshToken.findOne({
+    where: { token: refreshTokenValue },
+  });
+  if (!dbToken) {
+    const error = new Error("Refresh token invalid");
+    error.status = 401;
+    throw error;
+  }
+
+  if (dbToken.expiresAt < new Date()) {
+    const error = new Error("Refresh token expired");
+    error.status = 401;
+    throw error;
+  }
+
+  const user = await Users.findByPk(dbToken.userId);
+
+  if (!user) {
+    const error = new Error("User not found");
+    error.status = 404;
+    throw error;
+  }
+
+  const accessToken = jwt.sign(
+    { id: user.id, role: user.role, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" },
+  );
+
+  return accessToken;
+};
+
+// logout user
+exports.logout = async (refreshToken) => {
+  await RefreshToken.destroy({ where: { token: refreshToken } });
+};
+
+exports.updateUser = async (userId, user) => {
+  const allowedFields = ["name", "email"];
+  const filterdData = {};
+  allowedFields.forEach((field) => {
+    if (user[field]) {
+      filterdData[field] = user[field];
+    }
+  });
+  const [updatedCount , updatedUser] = await Users.update(filterdData, {
+    where: { id: userId }, returning: true,
+  });
+  if (updatedCount === 0) {
+    const error = new Error("User not found");
+    error.status = 404;
+    throw error;
+  }
+  const {id , name , email , role , isActive} = updatedUser[0];
+  return {id , name , email , role , isActive}
+};
+
+========================================================================
+services\authors.service.js
+========================================================================
+
+const { Authors } = require('../models/Index');
+
+exports.getAuthors = async () => {
+    const authors = await Authors.findAll();
+    return authors;
+}
+
+exports.getAuthorById = async (id) => {
+    
+        const author = await Authors.findByPk(id);
+        if(!author) {
+            const error = new Error('Author not found');
+            error.statusCode = 404;
+            throw error;
+        }
+        return author;
+    
+}
+
+
+exports.createAuthor = async (body) => {
+    const { name, year_of_birth } = body;
+    const newAuthor = await Authors.create({ name, year_of_birth });
+    return newAuthor;
+}
+
+exports.updateAuthor = async (id, body) => {
+    const { name, year_of_birth } = body;
+   
+        const author = await Authors.findByPk(id);
+        if(!author) {
+            const error = new Error('Author not found');
+            error.statusCode = 404;
+            throw error;
+        }
+        await author.update({ name, year_of_birth });
+        return author;
+}
+
+exports.deleteAuthor = async (id) => {
+        const author = await Authors.findByPk(id);
+        if(!author) {
+            const error = new Error('Author not found');
+            error.statusCode = 404;
+            throw error;
+        }
+        await author.destroy();
+        return { message: 'Author deleted', author };
+   
+}
+
+========================================================================
+services\book.service.js
+========================================================================
+
+const { Books, Authors, Genres } = require("../models/Index");
+
+
+// get all books
+exports.getBooks = async (query) => {
+    const { page = 1, limit = 10, authorId } = query;
+    const whereClause = {};
+    if (authorId) {
+        whereClause.author_id = authorId;
+    }
+    const offset = (page - 1) * limit;
+    const books = await Books.findAndCountAll({
+        where: whereClause,
+        include: [{
+            model: Authors,
+            attributes: ['id', 'name']
+        },
+        {
+            model: Genres,
+            through: { attributes: [] }
+        }],
+        distinct: true,
+        limit: limit,
+        offset: offset,
+        order: [['id', 'ASC']]
+
+    });
+    if (books.rows.length === 0) {
+        const error =  new Error('No books found');
+        error.status = 404;
+        throw error;
+    }
+    return {
+        success: true,
+        message: 'Books fetched successfully',
+        data: books.rows,
+        meta: {
+            total: books.count,
+            page: page,
+            limit: limit,
+            totalPages: Math.ceil(books.count / limit)
+        }
+    }
+}
+
+// get book by id
+exports.getBookById = async (id) => {
+    const book = await Books.findByPk(id, {
+        include: [{
+            model: Authors,
+            attributes: ['id', 'name']
+        },
+        {
+            model: Genres,
+            through: { attributes: [] }
+        }]
+    });
+    if (!book) {
+        const error = new Error('Book not found');
+        error.status = 404;
+        throw error;
+    }
+    return book;
+}
+
+
+// create book
+exports.createBook = async (bookData) => {
+    const { name, price,  author_id, genre_ids } = bookData;
+
+        const existingBook = await Books.findOne({
+            where: {
+                name: name
+            }
+        });
+        if (existingBook) {
+            const error = new Error('Book already exists');
+            error.status = 400;
+            throw error;
+        }
+    
+        const author = await Authors.findByPk(author_id);
+        if (!author) {
+            const error = new Error('Author not found');
+            error.status = 404;
+            throw error;
+        }
+        const book = await Books.create({ name, price,  author_id });
+        if (genre_ids && genre_ids.length > 0) {
+            await book.setGenres(genre_ids);
+        }
+        return book;
+    
+}
+
+// update book
+exports.updateBook = async (id, bookData) => {
+    const { name, price,  author_id, genre_ids } = bookData;
+    const book = await Books.findByPk(id);
+    if (!book) {
+        const error = new Error('Book not found');
+        error.status = 404;
+        throw error;
+    }
+    await book.update({ name, price,  author_id });
+
+    if (Array.isArray(genre_ids) && genre_ids.length > 0) {
+        await book.setGenres(genre_ids);
+    }
+    return book;
+}
+
+
+// delete book
+
+exports.deleteBook = async (id) => {
+
+    const book = await Books.findByPk(id);
+    if (!book) {
+        const error = new Error('Book not found');
+        error.status = 404;
+        throw error; 
+    }
+    await book.destroy();
+    return { message: 'Book deleted' };
+}
+
+========================================================================
+services\bookCopy.service.js
+========================================================================
+
+const { BookCopy , Books } = require('../models/Index');
+
+// get all bookCopy 
+exports.getAllBookCopiesWithBook  = async (limit , offset) => {
+    const bookCopy = await BookCopy.findAndCountAll({
+        include: [
+            {
+                model: Books,
+                attributes: ['name' , 'price'],
+            },
+        ],
+        limit,
+        offset
+    })
+    return { bookCopy , count: bookCopy.count }
+}
+
+// get bookCopy by id
+exports.getBookCopyById = async (id) => {
+    const bookCopy = await BookCopy.findByPk(id , {
+        include: [
+            {
+                model: Books,
+                attributes: ['name' , 'price'],
+
+            }, 
+        ],
+    })
+    if (!bookCopy) {
+        const error = new Error('Book not found')
+        error.status = 404
+        throw error
+    }
+    return bookCopy
+}
+
+// create bookCopy
+exports.createBookCopy = async (bookCopyData) => {
+    const bookCopy = await BookCopy.create(bookCopyData)
+    return bookCopy
+}
+
+// update bookCopy
+exports.updateBookCopy = async (id, bookCopyData) => {
+    const { book_id, conditionStatus, shelfLocation } = bookCopyData;
+    const existBook = await BookCopy.findByPk(id)
+    if (!existBook) {
+        const error = new Error('Book not found')
+        error.status = 404
+        throw error
+    }
+    await existBook.update({ book_id, conditionStatus, shelfLocation })
+    return existBook
+}
+
+// delete bookCopy
+exports.deleteBookCopy = async (id) => {
+    const bookCopy = await BookCopy.destroy({ where: { id } })
+    if (!bookCopy) {
+        const error = new Error('Book not found')
+        error.status = 404
+        throw error
+    }
+    return bookCopy
+}
+
+========================================================================
+services\genre.service.js
+========================================================================
+
+const { Genres } = require('../models/Index');
+
+
+exports.getGenres = async () => {
+
+        const allGenres = await Genres.findAll();
+        if (allGenres.length === 0) {
+            const error = new Error('No genres found');
+            error.status = 404;
+            throw error;
+        }
+        return allGenres;
+
+    }
+
+exports.getGenreById = async (id) => {
+        const genre = await Genres.findByPk(id);
+        if (!genre) {
+            const error = new Error('Genre not found');
+            error.status = 404;
+            throw error;
+        }
+        return genre;
+}
+
+
+exports.createGenre = async (name) => {
+    
+    const newGenre = await Genres.findOne({where: {name}});
+    if (newGenre) {
+        const error = new Error('Genre already exists');
+        error.status = 400;
+        throw error;
+    }
+    const genre = await Genres.create({name});
+    return genre;
+}
+
+exports.updateGenre = async (id , name) => {
+   
+        const exisitngGenre = await Genres.findByPk(id);
+        if (!exisitngGenre) {
+            const error = new Error('Genre not found');
+            error.status = 404;
+            throw error;
+        }
+        await exisitngGenre.update({ name });
+        return exisitngGenre;
+}
+
+exports.deleteGenre = async (id) => {
+   
+        const exisitngGenre = await Genres.findByPk(id);
+        if (!exisitngGenre) {
+            const error = new Error('Genre not found');
+            error.status = 404;
+            throw error;
+        }
+        await exisitngGenre.destroy();
+        return exisitngGenre;
+}
+
+========================================================================
+services\loan.service.js
+========================================================================
+
+const { Loan, BookCopy, Users, Books } = require("../models/Index");
+const sequelize = require("../config/sequelize.config");
+
+const LOAN_DURATION = 30; // 30 days
+const DAILY_FINE = 1;
+const MAX_ACTIVE_LOANS = 3;
+
+const createLoan = async (user_id, book_id) => {
+  const t = await sequelize.transaction();
+  try {
+    const bookCopy = await BookCopy.findOne({
+      where: {
+         book_id,
+         conditionStatus: "AVAILABLE",
+      },
+      transaction: t,
+      lock: t.LOCK.UPDATE,
+    });
+
+    // book copy not found
+    if (!bookCopy) {
+      const error = new Error("No available copy of this book");
+
+      error.status = 404;
+      throw error;
+    }
+
+    // book copy is not available
+    if (bookCopy.conditionStatus !== "AVAILABLE") {
+      const error = new Error("Book copy is not available");
+      error.status = 400;
+      throw error;
+    }
+
+    // check if user has reached the maximum number of active loans
+    const activeLoanCount = await Loan.count({
+      where: {
+        user_id,
+        status: "borrowed",
+      },
+      transaction: t,
+    });
+
+    if (activeLoanCount >= MAX_ACTIVE_LOANS) {
+      const error = new Error(
+        "User has reached the maximum number of active loans",
+      );
+      error.status = 400;
+      throw error;
+    }
+
+    // check if user has already borrowed this book
+    const existingLoan = await Loan.findOne({
+      where: {
+        user_id,
+        status: "borrowed",
+      },
+      include: {
+        model: BookCopy,
+        where: {
+          book_id: bookCopy.book_id,
+        },
+      },
+      transaction: t,
+    });
+
+    if (existingLoan) {
+      const error = new Error("User has already borrowed this book");
+      error.status = 400;
+      throw error;
+    }
+
+    const borrowDate = new Date();
+    const dueDate = new Date();
+    dueDate.setDate(borrowDate.getDate() + LOAN_DURATION);
+
+    const loan = await Loan.create(
+      {
+        user_id,
+        book_copy_id: bookCopy.id,
+        borrowDate,
+        dueDate,
+        status: "borrowed",
+        fine: 0,
+      },
+      { transaction: t },
+    );
+
+    await bookCopy.update(
+      {
+        conditionStatus: "BORROWED",
+      },
+      { transaction: t },
+    );
+
+    await t.commit();
+
+    return loan;
+  } catch (error) {
+    await t.rollback();
+    throw error;
+  }
+};
+
+const returnLoan = async (user_id,loan_id) => {
+  const t = await sequelize.transaction();
+  try {
+    const loan = await Loan.findOne(
+        {
+            where: {
+                user_id,
+                id: loan_id,
+            }
+        }
+        , {transaction: t });
+   
+    if (!loan) {
+      const error = new Error("Loan not found");
+      error.status = 404;
+      throw error;
+    }
+
+    if (loan.status === "returned") {
+      const error = new Error("Loan already returned");
+      error.status = 400;
+      throw error;
+    }
+
+    const now = new Date();
+    loan.returnDate = now;
+
+    const overdueDays = Math.max(
+      0,
+      Math.ceil((now - loan.dueDate) / (1000 * 60 * 60 * 24)),
+    );
+
+    const fine = overdueDays * DAILY_FINE;
+    loan.status = overdueDays > 0 ? "overdue" : "returned";
+
+    await loan.save();
+
+    const bookCopy = await BookCopy.findByPk(loan.book_copy_id , {transaction: t });
+
+    await bookCopy.update(
+      {
+        conditionStatus: "AVAILABLE",
+      },
+      { transaction: t },
+    );
+
+    await t.commit();
+
+    return loan;
+  } catch (error) {
+    await t.rollback();
+    throw error;
+  }
+};
+
+const showUserLoans = async (id)=> {
+    const loans = await Loan.findAll({
+        where: {
+            user_id: id,
+        }
+    })
+    return loans;
+}
+
+const showUserLoanById = async (id,loan_id) => {
+    const loan = await Loan.findOne({
+        where: {
+            user_id: id,
+            id: loan_id,
+        }
+    });
+    if (!loan) {
+        const error = new Error("Loan not found");
+        error.status = 404;
+        throw error;
+    }
+    return loan;
+}
+
+
+// admin routes
+const showAllLoans = async () => {
+    const loans = await Loan.findAll();
+    return loans;
+}
+
+const showLoanById = async (id)=> {
+    const loan = await Loan.findByPk(id , );
+    if (!loan) {
+        const error = new Error("Loan not found");
+        error.status = 404;
+        throw error;
+    }
+    return loan;
+}
+
+
+
+module.exports = {
+  createLoan,
+  returnLoan,
+  showAllLoans,
+  showUserLoans,
+  showLoanById,
+  showUserLoanById
+};
+
+========================================================================
+services\user.service.js
+========================================================================
+
+const { Users ,Books ,FavoriteBooks } = require("../models/Index");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+// get all users
+exports.getUsers = async () => {
+    const users = await Users.findAll({
+        attributes: ["id", "name", "email", "role", "isActive"]
+    });
+    
+    if (users.length === 0) {
+        const error = new Error('no users found');
+        error.status = 404;
+        throw error;
+    }
+    return { 
+        success: true, 
+        message: 'Users fetched successfully',
+        data: users 
+    };
+};
+
+// get user by id
+exports.getUserById = async (id) => {
+    const user = await Users.findByPk(id , {
+        attributes: [ "id", "name", "email", "role", "isActive"]
+    });
+    if (!user) {
+        const error = new Error('user not found');
+        error.status = 404;
+        throw error;
+    }
+    return {
+        success: true,
+        message: 'User fetched successfully',
+        data: user
+    };
+};
+
+
+
+// update user
+exports.updateUser = async (id, user) => {
+    if (user.password) {
+        user.password = await bcrypt.hash(user.password, 10);
+    }
+    const [, [updated]] = await Users.update(user, {
+        where: {
+            id: id
+        },
+        returning: true
+    });
+    if (!updated) {
+        const error = new Error('user not found');
+        error.status = 404;
+        throw error;
+    }
+const { name, email, role, isActive , password} = updated;
+
+    return {
+        success: true,
+        message: 'User updated successfully',
+        data: {id ,name,email,role,isActive,password}
+    };
+};
+
+// delete user
+exports.deleteUser = async (id) => {
+    const deletedUser = await Users.destroy({
+        where: {
+            id: id
+        }
+    });
+    if (deletedUser === 0) {
+        const error = new Error('user not found');
+        error.status = 404;
+        throw error;
+    }
+    return {
+        success: true,
+        message: 'User deleted successfully',
+        data: deletedUser
+    };
+};
+
+
+exports.getFavoriteBooks = async (id) => {
+    const favoriteBooks = await Users.findByPk(id, {
+        include: [{
+            model: Books,
+            as: 'Favorites',
+            through: { attributes: [] }
+        }]
+    });
+    if (!favoriteBooks) {
+        const error = new Error('favorite books not found');
+        error.status = 404;
+        throw error;
+    }
+    if (favoriteBooks.Favorites.length === 0) {
+        const error = new Error('no favorite books found');
+        error.status = 404;
+        throw error;
+    }
+    const favoriteBooksData = favoriteBooks.Favorites.map(book => book.toJSON());
+    return favoriteBooksData;
+};
+
+exports.addFavoriteBook = async (id, book_id) => {
+    const [favoriteBook, created] = await FavoriteBooks.findOrCreate({
+        where: {
+            user_id: id,
+            book_id: book_id
+        }
+    });
+    if (!created) {
+        const error = new Error('favorite book is already in your favorites');
+        error.status = 400;
+        throw error;
+    }
+    const book = await Books.findByPk(book_id);
+    if (!book) {
+        const error = new Error('book not found');
+        error.status = 404;
+        throw error;
+    }
+    return book ;
+};
+
+exports.deleteFavoriteBook = async (id, book_id) => {
+    const favoriteBook = await FavoriteBooks.findOne({
+        where: {
+            user_id: id,
+            book_id: book_id
+        }
+    });
+    if (!favoriteBook) {
+        const error = new Error('favorite book not found');
+        error.status = 404;
+        throw error;
+    }
+    await favoriteBook.destroy();
+    return favoriteBook;
+};

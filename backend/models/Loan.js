@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/sequelize");
-const { Users, BookCopy } = require("./models");
+const sequelize = require("../config/sequelize.config");
+const { Users, BookCopy } = require("./Index");
 const { id } = require("zod/locales");
 
 const Loan = sequelize.define(

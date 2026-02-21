@@ -1,4 +1,4 @@
-const { Books, Authors, Genres } = require("../models/models");
+const { Books, Authors, Genres } = require("../models/Index");
 
 
 // get all books

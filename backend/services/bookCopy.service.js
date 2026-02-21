@@ -1,4 +1,4 @@
-const { BookCopy , Books } = require('../models/models');
+const { BookCopy , Books } = require('../models/Index');
 
 // get all bookCopy 
 exports.getAllBookCopiesWithBook  = async (limit , offset) => {
