@@ -13,7 +13,11 @@ exports.getBooks = async (req, res, next) => {
 exports.getBookById = async (req, res   , next) => {
     try {
         const book = await bookService.getBookById(req.params.id);
-        res.json(book);
+        res.json({
+            success: true,
+            message: 'Book fetched successfully',
+            data: book
+        });
     } catch (error) {
         next(error)
     }
@@ -25,7 +29,11 @@ exports.createBook = async (req, res, next) => {
     
     const book = await bookService.createBook({ name, price,  author_id, genre_ids });
     
-    res.json(book); 
+    res.json({
+        success: true,
+        message: 'Book created successfully',
+        data: book
+    }); 
     } catch (error) {
         next(error)
     }

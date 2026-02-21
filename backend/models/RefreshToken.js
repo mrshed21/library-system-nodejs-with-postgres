@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/sequelize.config');
-const Users = require('./Users');
+const {sequelize} = require('../config/sequelize.config');
 const RefreshToken = sequelize.define('RefreshToken', {
     token: {
         type: DataTypes.STRING,
@@ -14,7 +13,7 @@ const RefreshToken = sequelize.define('RefreshToken', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: Users,
+            model: "users",
             key: "id"
         }
     }
@@ -23,8 +22,7 @@ const RefreshToken = sequelize.define('RefreshToken', {
     timestamps: true
 });
 
-Users.hasMany(RefreshToken, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-RefreshToken.belongsTo(Users, { foreignKey: 'user_id' });
+
 
 module.exports = RefreshToken;
 

@@ -1,5 +1,5 @@
 const { Loan, BookCopy, Users, Books } = require("../models/Index");
-const sequelize = require("../config/sequelize.config");
+const {sequelize} = require("../config/sequelize.config");
 
 const LOAN_DURATION = 30; // 30 days
 const DAILY_FINE = 1;

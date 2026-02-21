@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/sequelize.config');
+const {sequelize} = require('../config/sequelize.config');
 
 const Users = sequelize.define('Users', {
     id: {
@@ -34,7 +34,8 @@ const Users = sequelize.define('Users', {
 },
     {
         tableName: 'users',
-        timestamps: true
+        timestamps: true,
+        paranoid: true,
     }
 );
 

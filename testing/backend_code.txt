@@ -16,9 +16,21 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     host: DB_HOST,
     port: DB_PORT,
     dialect: 'postgres',
+    logging: false
 });
 
-module.exports = sequelize;
+const connectDB = async () => {
+    try {
+        await sequelize.authenticate();
+        console.log('✅ Connection has been established successfully.');
+        await sequelize.sync({ alter: true });
+        console.log('✅ Database synchronized successfully.');
+    } catch (error) {
+        console.error('❌ Unable to connect to the database:', error);
+    }
+};
+
+module.exports = { sequelize, connectDB };
 
 ========================================================================
 controllers\auth.controller.js
@@ -82,12 +94,21 @@ exports.refreshToken = async (req, res, next) => {
       error.status = 401;
       throw error;
     }
-    const newAccessToken = await authService.refreshToken(refreshToken);
+    const { accessToken, newRefreshTokenValue, newExpiresAt } = await authService.refreshToken(refreshToken);
+
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true, 
+      sameSite: "Strict",
+      expires: newExpiresAt,
+    });
+
 
     res.json({
       success: true,
       message: "Access token refreshed successfully",
-      token: newAccessToken,
+      token: accessToken,
     });
   } catch (error) {
     next(error);
@@ -141,8 +162,9 @@ exports.getMe = async (req ,res , next)=> {
 exports.updateUser = async (req , res ,next) => {
   try {
     const userId = req.user.id
+    const { name, email } = req.body
 
-    const updatedUser = await authService.updateUser(userId , req.body)
+    const updatedUser = await authService.updateUser(userId , { name, email })
 
     res.json({
       success: true,
@@ -164,7 +186,11 @@ const authorService = require('../services/authors.service');
 exports.getAuthors = async (req, res, next) => {
     try {
         const authors = await authorService.getAuthors();
-        res.json(authors);
+        res.json({
+            success: true,
+            message: 'Authors fetched successfully',
+            data: authors
+        });
     } catch (error) {
         next(error);
     }
@@ -174,7 +200,11 @@ exports.getAuthors = async (req, res, next) => {
 exports.getAuthorById = async (req, res, next) => {
     try {
         const author = await authorService.getAuthorById(req.params.id);
-        res.json(author);
+        res.json({
+            success: true,
+            message: 'Author fetched successfully',
+            data: author
+        });
     } catch (error) {
         next(error);
     }
@@ -190,7 +220,11 @@ exports.createAuthor = async (req, res, next) => {
     }
     try {
         const author = await authorService.createAuthor(req.body);
-        res.json(author);
+        res.json({
+            success: true,
+            message: 'Author created successfully',
+            data: author
+        });
     } catch (error) {
         next(error);
     }
@@ -200,7 +234,11 @@ exports.createAuthor = async (req, res, next) => {
 exports.updateAuthor = async (req, res, next) => {
     try {
         const author = await authorService.updateAuthor(req.params.id, req.body);
-        res.json(author);
+        res.json({
+            success: true,
+            message: 'Author updated successfully',
+            data: author
+        });
     } catch (error) {
         next(error);
     }
@@ -210,7 +248,11 @@ exports.updateAuthor = async (req, res, next) => {
 exports.deleteAuthor = async (req, res, next) => {
     try {
         const author = await authorService.deleteAuthor(req.params.id);
-        res.json(author);
+        res.json({
+            success: true,
+            message: 'Author deleted successfully',
+            data: author
+        });
     } catch (error) {
         next(error);
     }
@@ -235,7 +277,11 @@ exports.getBooks = async (req, res, next) => {
 exports.getBookById = async (req, res   , next) => {
     try {
         const book = await bookService.getBookById(req.params.id);
-        res.json(book);
+        res.json({
+            success: true,
+            message: 'Book fetched successfully',
+            data: book
+        });
     } catch (error) {
         next(error)
     }
@@ -247,7 +293,11 @@ exports.createBook = async (req, res, next) => {
     
     const book = await bookService.createBook({ name, price,  author_id, genre_ids });
     
-    res.json(book); 
+    res.json({
+        success: true,
+        message: 'Book created successfully',
+        data: book
+    }); 
     } catch (error) {
         next(error)
     }
@@ -523,8 +573,10 @@ exports.getUserById = async (req, res, next) => {
 };
 
 exports.updateUser = async (req, res, next) => {
+    const userId = req.user.id;
+    const { name , email  } = req.body;
     try {
-        const user = await userService.updateUser(req.params.id, req.body);
+        const user = await userService.updateUser(userId, { name , email });
         res.json(user);
     } catch (error) {
         next(error);
@@ -785,7 +837,7 @@ models\Authors.js
 ========================================================================
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/sequelize.config');
+const {sequelize} = require('../config/sequelize.config');
 
 const Authors = sequelize.define('Authors', {
     id: {
@@ -805,6 +857,7 @@ const Authors = sequelize.define('Authors', {
 }, {
     tableName: 'Authors',
     timestamps: true,
+    paranoid: true,
 });
 
 module.exports = Authors;
@@ -814,8 +867,8 @@ models\BookCopy.js
 ========================================================================
 
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/sequelize.config");
-const Books = require("./Books");
+const {sequelize} = require("../config/sequelize.config");
+
 const BookCopy = sequelize.define("BookCopy", {
     id: {
         type: DataTypes.INTEGER,
@@ -826,7 +879,7 @@ const BookCopy = sequelize.define("BookCopy", {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: Books,
+            model: "Books",
             key: "id",
         },
         onDelete: "CASCADE",
@@ -845,10 +898,10 @@ const BookCopy = sequelize.define("BookCopy", {
     {
         tableName: "book_copies",
         timestamps: true,
+        paranoid: true,
     }
 );
 
-Books.hasMany(BookCopy, { foreignKey: 'book_id', onDelete: 'CASCADE' });
 
 module.exports = BookCopy;
 
@@ -856,7 +909,7 @@ module.exports = BookCopy;
 models\BookGenres.js
 ========================================================================
 
-const sequelize = require("../config/sequelize.config");
+const {sequelize} = require("../config/sequelize.config");
 
 
 //TODO implement the BookGenres model
@@ -866,7 +919,8 @@ const BookGenre = sequelize.define(
    {},
   {
     tableName: "book_genres",
-    timestamps: false
+    timestamps: false,
+    
   }
 );
 
@@ -877,8 +931,7 @@ models\Books.js
 ========================================================================
 
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/sequelize.config");
-const Authors = require("./authors");
+const {sequelize} = require("../config/sequelize.config");
 
 const Books = sequelize.define(
   "Books",
@@ -903,7 +956,7 @@ const Books = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Authors,
+        model: "Authors",
         key: "id",
       },
     },
@@ -911,11 +964,10 @@ const Books = sequelize.define(
   {
     tableName: "Books",
     timestamps: true,
+    paranoid: true,
   },
 );
 
-Books.belongsTo(Authors, { foreignKey: "author_id", onDelete: "CASCADE" });
-Authors.hasMany(Books, { foreignKey: "author_id" });
 
 module.exports = Books;
 
@@ -924,9 +976,7 @@ models\FavoriteBooks.js
 ========================================================================
 
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/sequelize.config");
-const Users = require("./Users");
-const Books = require("./Books");
+const {sequelize} = require("../config/sequelize.config");
 
 const FavoriteBooks = sequelize.define(
   "FavoriteBooks",
@@ -955,7 +1005,7 @@ models\Genres.js
 ========================================================================
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/sequelize.config');
+const {sequelize} = require('../config/sequelize.config');
 
 //TODO implement the Genres model
 const Genres = sequelize.define('Genres', {
@@ -981,6 +1031,7 @@ const Genres = sequelize.define('Genres', {
 {
     tableName: 'Genres',
     timestamps: true,
+    paranoid: true,
    
 }
 )
@@ -991,55 +1042,77 @@ module.exports = Genres;
 models\Index.js
 ========================================================================
 
-const Authors = require('./authors');
-const Books = require('./Books');
-const Genres = require('./genres');
-const BookGenres = require('./bookGenres');
-const Users = require('./Users');
-const RefreshToken = require('./RefreshToken');
-const FavoriteBooks = require('./FavoriteBooks');
-const BookCopy = require('./BookCopy');
-const Loan = require('./Loan'); 
+const Authors = require("./authors");
+const Books = require("./Books");
+const Genres = require("./genres");
+const BookGenres = require("./bookGenres");
+const Users = require("./Users");
+const RefreshToken = require("./RefreshToken");
+const FavoriteBooks = require("./FavoriteBooks");
+const BookCopy = require("./BookCopy");
+const Loan = require("./Loan");
 
+
+// Authors-Books relationship
+Books.belongsTo(Authors, { foreignKey: "author_id", onDelete: "CASCADE" });
+Authors.hasMany(Books, { foreignKey: "author_id" });
+
+
+
+// Books-Genres relationship
 Books.belongsToMany(Genres, {
   through: BookGenres,
   foreignKey: "book_id",
-  otherKey: "genre_id"
+  otherKey: "genre_id",
 });
 
 Genres.belongsToMany(Books, {
   through: BookGenres,
   foreignKey: "genre_id",
-  otherKey: "book_id"
+  otherKey: "book_id",
 });
 
-Users.belongsToMany(Books, { through: FavoriteBooks, as: 'Favorites' ,foreignKey: 'user_id'});
-Books.belongsToMany(Users, { through: FavoriteBooks, as: 'FavoredBy' ,foreignKey: 'book_id'});
 
-BookCopy.belongsTo(Books, { foreignKey: 'book_id', onDelete: 'CASCADE' });
-Books.hasMany(BookCopy, { foreignKey: 'book_id', onDelete: 'CASCADE' });
+// Users-Books relationship (favorites)
+Users.belongsToMany(Books, {
+  through: FavoriteBooks,
+  as: "Favorites",
+  foreignKey: "user_id",
+});
+Books.belongsToMany(Users, {
+  through: FavoriteBooks,
+  as: "FavoredBy",
+  foreignKey: "book_id",
+});
 
+// Books-BookCopy relationship
+BookCopy.belongsTo(Books, { foreignKey: "book_id", onDelete: "CASCADE" });
+Books.hasMany(BookCopy, { foreignKey: "book_id", onDelete: "CASCADE" });
 
-
+// Users-Loan relationship
 Loan.belongsTo(Users, { foreignKey: "user_id", onDelete: "CASCADE" });
 Users.hasMany(Loan, { foreignKey: "user_id" });
 
+// BookCopy-Loan relationship
 Loan.belongsTo(BookCopy, { foreignKey: "book_copy_id", onDelete: "CASCADE" });
 BookCopy.hasMany(Loan, { foreignKey: "book_copy_id" });
 
 
+// Users-RefreshToken relationship
+Users.hasMany(RefreshToken, { foreignKey: "user_id", onDelete: "CASCADE" });
+RefreshToken.belongsTo(Users, { foreignKey: "user_id" });
 
 
 const models = {
-    Authors,
-    Books,
-    Genres,
-    BookGenres,
-    Users,
-    RefreshToken,
-    FavoriteBooks,
-    BookCopy,
-    Loan
+  Authors,
+  Books,
+  Genres,
+  BookGenres,
+  Users,
+  RefreshToken,
+  FavoriteBooks,
+  BookCopy,
+  Loan,
 };
 
 module.exports = models;
@@ -1049,9 +1122,7 @@ models\Loan.js
 ========================================================================
 
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/sequelize.config");
-const { Users, BookCopy } = require("./Index");
-const { id } = require("zod/locales");
+const {sequelize} = require("../config/sequelize.config");
 
 const Loan = sequelize.define(
   "Loan",
@@ -1065,7 +1136,7 @@ const Loan = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Users,
+        model: "users",
         key: "id",
       },
       onDelete: "CASCADE",
@@ -1074,7 +1145,7 @@ const Loan = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: BookCopy,
+        model: "book_copies",
         key: "id",
       },
       onDelete: "CASCADE",
@@ -1106,76 +1177,7 @@ const Loan = sequelize.define(
   {
     tableName: "loans",
     timestamps: true,
-  },
-);
-
-
-
-
-module.exports = Loan;
-
-========================================================================
-models\Loans.js
-========================================================================
-
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/sequelize.config");
-const Users = require("./Users");
-const BookCopy = require("./BookCopy");
-
-const Loan = sequelize.define(
-  "Loan",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: Users,
-        key: "id",
-      },
-      onDelete: "CASCADE",
-    },
-    book_copy_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: BookCopy,
-        key: "id",
-      },
-      onDelete: "CASCADE",
-    },
-    status: {
-      type: DataTypes.ENUM("borrowed", "returned", "overdue"),
-      allowNull: false,
-      defaultValue: "borrowed",
-    },
-    borrowDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-    dueDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    returnDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    fine: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: true,
-      defaultValue: 0,
-    },
-  },
-  {
-    tableName: "loans",
-    timestamps: true,
+    paranoid: true,
   },
 );
 
@@ -1189,8 +1191,7 @@ models\RefreshToken.js
 ========================================================================
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/sequelize.config');
-const Users = require('./Users');
+const {sequelize} = require('../config/sequelize.config');
 const RefreshToken = sequelize.define('RefreshToken', {
     token: {
         type: DataTypes.STRING,
@@ -1204,7 +1205,7 @@ const RefreshToken = sequelize.define('RefreshToken', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: Users,
+            model: "users",
             key: "id"
         }
     }
@@ -1213,8 +1214,7 @@ const RefreshToken = sequelize.define('RefreshToken', {
     timestamps: true
 });
 
-Users.hasMany(RefreshToken, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-RefreshToken.belongsTo(Users, { foreignKey: 'user_id' });
+
 
 module.exports = RefreshToken;
 
@@ -1223,7 +1223,7 @@ models\Users.js
 ========================================================================
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/sequelize.config');
+const {sequelize} = require('../config/sequelize.config');
 
 const Users = sequelize.define('Users', {
     id: {
@@ -1258,7 +1258,8 @@ const Users = sequelize.define('Users', {
 },
     {
         tableName: 'users',
-        timestamps: true
+        timestamps: true,
+        paranoid: true,
     }
 );
 
@@ -1438,6 +1439,61 @@ router.put('/genres/:id',authMiddleware,adminonly, validateId, validate(updateGe
 
 // delete genre by id
 router.delete('/genres/:id',authMiddleware,adminonly, validateId, genreController.deleteGenre);
+
+module.exports = router;
+
+========================================================================
+routes\Index.js
+========================================================================
+
+const express = require('express');
+const router = express.Router();
+
+
+const authorsRouter = require('../routes/authors.routes');
+const booksRouter = require('../routes/books.routes');
+const genresRouter = require('../routes/genres.routes');
+const usersRouter = require('../routes/users.routes');
+const authRouter = require('../routes/auth.routes');
+const adminRouter = require('../routes/admin.routes');
+const loanRouter = require('../routes/loanRoute.routes');
+
+
+const { defaultLimiter } = require('../middleware/limiter');
+const { authMiddleware,adminonly } = require('../middleware/auth');
+const errorHandler = require('../middleware/errorHandler');        
+
+
+const path = require('path');
+
+
+
+router.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
+
+router.use('/api', defaultLimiter);
+router.use('/api', booksRouter);
+router.use('/api', authorsRouter);
+router.use('/api', genresRouter);
+router.use('/api', usersRouter);
+router.use('/api', loanRouter);
+
+router.use('/api/admin',authMiddleware, adminonly, adminRouter);
+router.use('/api', authRouter);
+
+
+
+router.use((req, res, next) => {
+    const error = new Error(`Route ${req.originalUrl} not found`);
+    error.status = 404;
+    next(error);
+});
+
+
+router.use(errorHandler);
+
+
 
 module.exports = router;
 
@@ -1700,83 +1756,33 @@ server.js
 ========================================================================
 
 const express = require('express');
+const app = express();
 require('dotenv').config();
 const path = require('path');
 const cors = require('cors');
-const app = express();
-const port = process.env.PORT || 3000;
-const sequelize = require('./config/sequelize.config');
+const { connectDB } = require('./config/sequelize.config');
 const helmet = require('helmet');
-
-const { defaultLimiter } = require('./middleware/limiter');
-
+const apiRoutes = require('./routes/Index');
 
 
-const authorsRouter = require('./routes/authors.routes');
-const booksRouter = require('./routes/books.routes');
-const genresRouter = require('./routes/genres.routes');
-const usersRouter = require('./routes/users.routes');
-const authRouter = require('./routes/auth.routes');
-const adminRouter = require('./routes/admin.routes');
-const loanRouter = require('./routes/loanRoute.routes');
+const PORT = process.env.PORT || 3000;
 
-const errorHandler = require('./middleware/errorHandler');        
-const { authMiddleware,adminonly } = require('./middleware/auth');
+
+
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'frontend')));
 app.use(helmet());
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
-});
 
 
+app.use('/api', apiRoutes);
 
-app.use('/api', defaultLimiter);
-app.use('/api', booksRouter);
-app.use('/api', authorsRouter);
-app.use('/api', genresRouter);
-app.use('/api', usersRouter);
-app.use('/api', loanRouter);
+connectDB();
 
-
-
-app.use('/api/admin',authMiddleware, adminonly, adminRouter);
-
-
-
-app.use('/api', authRouter);
-
-
-
-
-app.use((req, res, next) => {
-    const error = new Error(`Route ${req.originalUrl} not found`);
-    error.status = 404;
-    next(error);
-});
-
-
-app.use(errorHandler);
-
-
-
-app.listen(port, () => {
-    sequelize.authenticate()
-    .then(() => {
-        sequelize.sync()
-        .then(() => {
-            console.log('Database and tables created!');
-        })
-        .catch((error) => {
-            console.error('Error syncing database:', error);
-        });
-    })
-    .catch((error) => {
-        console.error('Unable to connect to the database or sync tables:', error);
-    });
+app.listen(PORT, () => {
+   console.log(`🚀 Server is running on port ${PORT}`);
 });
 
 ========================================================================
@@ -1890,9 +1896,9 @@ exports.loginUser = async (user) => {
 };
 
 // refresh token
-exports.refreshAccessToken = async (refreshTokenValue) => {
+exports.refreshAccessToken = async (oldRefreshTokenValue) => {
   const dbToken = await RefreshToken.findOne({
-    where: { token: refreshTokenValue },
+    where: { token: oldRefreshTokenValue },
   });
   if (!dbToken) {
     const error = new Error("Refresh token invalid");
@@ -1906,7 +1912,7 @@ exports.refreshAccessToken = async (refreshTokenValue) => {
     throw error;
   }
 
-  const user = await Users.findByPk(dbToken.userId);
+  const user = await Users.findByPk(dbToken.user_id);
 
   if (!user) {
     const error = new Error("User not found");
@@ -1914,13 +1920,28 @@ exports.refreshAccessToken = async (refreshTokenValue) => {
     throw error;
   }
 
+  await dbToken.destroy();
+
+  const newRefreshTokenValue = crypto.randomBytes(64).toString("hex");
+  const newExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+  await RefreshToken.create({
+    token: newRefreshTokenValue,
+    expiresAt: newExpiresAt,
+    user_id: user.id,
+  });
+
   const accessToken = jwt.sign(
     { id: user.id, role: user.role, email: user.email },
     process.env.JWT_SECRET,
     { expiresIn: "1h" },
   );
 
-  return accessToken;
+  return {
+    accessToken,
+    refreshToken: newRefreshTokenValue,
+    expiresAt: newExpiresAt,
+  };
 };
 
 // logout user
@@ -2275,7 +2296,7 @@ services\loan.service.js
 ========================================================================
 
 const { Loan, BookCopy, Users, Books } = require("../models/Index");
-const sequelize = require("../config/sequelize.config");
+const {sequelize} = require("../config/sequelize.config");
 
 const LOAN_DURATION = 30; // 30 days
 const DAILY_FINE = 1;
@@ -2532,26 +2553,24 @@ exports.getUserById = async (id) => {
 
 // update user
 exports.updateUser = async (id, user) => {
-    if (user.password) {
-        user.password = await bcrypt.hash(user.password, 10);
-    }
-    const [, [updated]] = await Users.update(user, {
+   
+    const [updatedCount, updatedRows] = await Users.update(user, {
         where: {
             id: id
         },
         returning: true
     });
-    if (!updated) {
+   if (updatedCount === 0 || !updatedRows[0]) {
         const error = new Error('user not found');
         error.status = 404;
         throw error;
     }
-const { name, email, role, isActive , password} = updated;
+const { name, email,  isActive } = updatedRows[0];
 
     return {
         success: true,
         message: 'User updated successfully',
-        data: {id ,name,email,role,isActive,password}
+        data: {id ,name,email,isActive}
     };
 };
 

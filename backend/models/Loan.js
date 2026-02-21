@@ -1,7 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/sequelize.config");
-const { Users, BookCopy } = require("./Index");
-const { id } = require("zod/locales");
+const {sequelize} = require("../config/sequelize.config");
 
 const Loan = sequelize.define(
   "Loan",
@@ -15,7 +13,7 @@ const Loan = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Users,
+        model: "users",
         key: "id",
       },
       onDelete: "CASCADE",
@@ -24,7 +22,7 @@ const Loan = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: BookCopy,
+        model: "book_copies",
         key: "id",
       },
       onDelete: "CASCADE",
@@ -56,6 +54,7 @@ const Loan = sequelize.define(
   {
     tableName: "loans",
     timestamps: true,
+    paranoid: true,
   },
 );
 

@@ -1,4 +1,4 @@
-const sequelize = require("../config/sequelize.config");
+const {sequelize} = require("../config/sequelize.config");
 
 
 //TODO implement the BookGenres model
@@ -8,7 +8,8 @@ const BookGenre = sequelize.define(
    {},
   {
     tableName: "book_genres",
-    timestamps: false
+    timestamps: false,
+    
   }
 );
 

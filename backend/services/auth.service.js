@@ -105,9 +105,9 @@ exports.loginUser = async (user) => {
 };
 
 // refresh token
-exports.refreshAccessToken = async (refreshTokenValue) => {
+exports.refreshAccessToken = async (oldRefreshTokenValue) => {
   const dbToken = await RefreshToken.findOne({
-    where: { token: refreshTokenValue },
+    where: { token: oldRefreshTokenValue },
   });
   if (!dbToken) {
     const error = new Error("Refresh token invalid");
@@ -121,7 +121,7 @@ exports.refreshAccessToken = async (refreshTokenValue) => {
     throw error;
   }
 
-  const user = await Users.findByPk(dbToken.userId);
+  const user = await Users.findByPk(dbToken.user_id);
 
   if (!user) {
     const error = new Error("User not found");
@@ -129,13 +129,28 @@ exports.refreshAccessToken = async (refreshTokenValue) => {
     throw error;
   }
 
+  await dbToken.destroy();
+
+  const newRefreshTokenValue = crypto.randomBytes(64).toString("hex");
+  const newExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+  await RefreshToken.create({
+    token: newRefreshTokenValue,
+    expiresAt: newExpiresAt,
+    user_id: user.id,
+  });
+
   const accessToken = jwt.sign(
     { id: user.id, role: user.role, email: user.email },
     process.env.JWT_SECRET,
     { expiresIn: "1h" },
   );
 
-  return accessToken;
+  return {
+    accessToken,
+    newRefreshTokenValue,
+    newExpiresAt
+  };
 };
 
 // logout user

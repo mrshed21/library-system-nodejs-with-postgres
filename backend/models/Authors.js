@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/sequelize.config');
+const {sequelize} = require('../config/sequelize.config');
 
 const Authors = sequelize.define('Authors', {
     id: {
@@ -19,6 +19,7 @@ const Authors = sequelize.define('Authors', {
 }, {
     tableName: 'Authors',
     timestamps: true,
+    paranoid: true,
 });
 
 module.exports = Authors;

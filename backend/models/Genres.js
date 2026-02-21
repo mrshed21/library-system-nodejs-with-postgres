@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/sequelize.config');
+const {sequelize} = require('../config/sequelize.config');
 
 //TODO implement the Genres model
 const Genres = sequelize.define('Genres', {
@@ -25,6 +25,7 @@ const Genres = sequelize.define('Genres', {
 {
     tableName: 'Genres',
     timestamps: true,
+    paranoid: true,
    
 }
 )

@@ -41,26 +41,24 @@ exports.getUserById = async (id) => {
 
 // update user
 exports.updateUser = async (id, user) => {
-    if (user.password) {
-        user.password = await bcrypt.hash(user.password, 10);
-    }
-    const [, [updated]] = await Users.update(user, {
+   
+    const [updatedCount, updatedRows] = await Users.update(user, {
         where: {
             id: id
         },
         returning: true
     });
-    if (!updated) {
+   if (updatedCount === 0 || !updatedRows[0]) {
         const error = new Error('user not found');
         error.status = 404;
         throw error;
     }
-const { name, email, role, isActive , password} = updated;
+const { name, email,  isActive } = updatedRows[0];
 
     return {
         success: true,
         message: 'User updated successfully',
-        data: {id ,name,email,role,isActive,password}
+        data: {id ,name,email,isActive}
     };
 };
 

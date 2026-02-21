@@ -4,7 +4,11 @@ const authorService = require('../services/authors.service');
 exports.getAuthors = async (req, res, next) => {
     try {
         const authors = await authorService.getAuthors();
-        res.json(authors);
+        res.json({
+            success: true,
+            message: 'Authors fetched successfully',
+            data: authors
+        });
     } catch (error) {
         next(error);
     }
@@ -14,7 +18,11 @@ exports.getAuthors = async (req, res, next) => {
 exports.getAuthorById = async (req, res, next) => {
     try {
         const author = await authorService.getAuthorById(req.params.id);
-        res.json(author);
+        res.json({
+            success: true,
+            message: 'Author fetched successfully',
+            data: author
+        });
     } catch (error) {
         next(error);
     }
@@ -30,7 +38,11 @@ exports.createAuthor = async (req, res, next) => {
     }
     try {
         const author = await authorService.createAuthor(req.body);
-        res.json(author);
+        res.json({
+            success: true,
+            message: 'Author created successfully',
+            data: author
+        });
     } catch (error) {
         next(error);
     }
@@ -40,7 +52,11 @@ exports.createAuthor = async (req, res, next) => {
 exports.updateAuthor = async (req, res, next) => {
     try {
         const author = await authorService.updateAuthor(req.params.id, req.body);
-        res.json(author);
+        res.json({
+            success: true,
+            message: 'Author updated successfully',
+            data: author
+        });
     } catch (error) {
         next(error);
     }
@@ -50,7 +66,11 @@ exports.updateAuthor = async (req, res, next) => {
 exports.deleteAuthor = async (req, res, next) => {
     try {
         const author = await authorService.deleteAuthor(req.params.id);
-        res.json(author);
+        res.json({
+            success: true,
+            message: 'Author deleted successfully',
+            data: author
+        });
     } catch (error) {
         next(error);
     }

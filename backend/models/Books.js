@@ -1,6 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/sequelize.config");
-const Authors = require("./authors");
+const {sequelize} = require("../config/sequelize.config");
 
 const Books = sequelize.define(
   "Books",
@@ -25,7 +24,7 @@ const Books = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Authors,
+        model: "Authors",
         key: "id",
       },
     },
@@ -33,10 +32,9 @@ const Books = sequelize.define(
   {
     tableName: "Books",
     timestamps: true,
+    paranoid: true,
   },
 );
 
-Books.belongsTo(Authors, { foreignKey: "author_id", onDelete: "CASCADE" });
-Authors.hasMany(Books, { foreignKey: "author_id" });
 
 module.exports = Books;
