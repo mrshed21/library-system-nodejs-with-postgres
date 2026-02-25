@@ -158,12 +158,13 @@ exports.logout = async (refreshToken) => {
   await RefreshToken.destroy({ where: { token: refreshToken } });
 };
 
-exports.updateUser = async (userId, user) => {
+// update user
+exports.updateUser = async (userId, userdata) => {
   const allowedFields = ["name", "email"];
   const filterdData = {};
   allowedFields.forEach((field) => {
-    if (user[field]) {
-      filterdData[field] = user[field];
+    if (userdata[field]) {
+      filterdData[field] = userdata[field];
     }
   });
   const [updatedCount , updatedUser] = await Users.update(filterdData, {
@@ -173,7 +174,7 @@ exports.updateUser = async (userId, user) => {
     const error = new Error("User not found");
     error.status = 404;
     throw error;
-  }
+  
   const {id , name , email , role , isActive} = updatedUser[0];
   return {id , name , email , role , isActive}
 };

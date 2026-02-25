@@ -1,5 +1,5 @@
 ========================================================================
-config\sequelize.config.js
+config/sequelize.config.js
 ========================================================================
 
 const { Sequelize } = require("sequelize");
@@ -33,7 +33,7 @@ const connectDB = async () => {
 module.exports = { sequelize, connectDB };
 
 ========================================================================
-controllers\auth.controller.js
+controllers/auth.controller.js
 ========================================================================
 
 const authService = require("../services/auth.service");
@@ -94,16 +94,15 @@ exports.refreshToken = async (req, res, next) => {
       error.status = 401;
       throw error;
     }
-    const { accessToken, newRefreshTokenValue, newExpiresAt } = await authService.refreshToken(refreshToken);
+    const { accessToken, newRefreshTokenValue, newExpiresAt } =
+      await authService.refreshAccessToken(refreshToken);
 
-
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie("refreshToken", newRefreshTokenValue, {
       httpOnly: true,
-      secure: true, 
+      secure: true,
       sameSite: "Strict",
       expires: newExpiresAt,
     });
-
 
     res.json({
       success: true,
@@ -115,69 +114,69 @@ exports.refreshToken = async (req, res, next) => {
   }
 };
 
-
-
- exports.logoutUser = async (req, res, next) => {
+exports.logoutUser = async (req, res, next) => {
   try {
     const { refreshToken } = req.cookies;
 
     if (!refreshToken) {
       return res.status(400).json({
         success: false,
-        message: 'No refresh token to logout'
+        message: "No refresh token to logout",
       });
     }
 
     await authService.logout(refreshToken);
 
-    
-    res.clearCookie('refreshToken');
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+    });
 
     res.json({
       success: true,
-      message: 'Logged out successfully'
+      message: "Logged out successfully",
     });
   } catch (err) {
     next(err);
   }
-}; 
+};
 
-
-exports.getMe = async (req ,res , next)=> {
+exports.getMe = async (req, res, next) => {
   try {
-    const userId = req.user.id
+    const userId = req.user.id;
 
-    const user = await userService.getUserById(userId)
+    const user = await userService.getUserById(userId);
 
     res.json({
       success: true,
       message: "User fetched successfully",
       data: user,
-    })
+    });
   } catch (error) {
-    next (error)
+    next(error);
   }
-}
+};
 
-exports.updateUser = async (req , res ,next) => {
+exports.updateUser = async (req, res, next) => {
   try {
-    const userId = req.user.id
-    const { name, email } = req.body
+    const userId = req.user.id;
+    const { name, email } = req.body;
 
-    const updatedUser = await authService.updateUser(userId , { name, email })
+    const updatedUser = await authService.updateUser(userId, { name, email });
 
     res.json({
       success: true,
       message: "User updated successfully",
       data: updatedUser,
-    })
+    });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
 ========================================================================
-controllers\author.controller.js
+controllers/author.controller.js
 ========================================================================
 
 const authorService = require('../services/authors.service');
@@ -259,7 +258,7 @@ exports.deleteAuthor = async (req, res, next) => {
 };
 
 ========================================================================
-controllers\book.controller.js
+controllers/book.controller.js
 ========================================================================
 
 const bookService = require('../services/book.service');
@@ -326,7 +325,7 @@ exports.deleteBook = async (req ,res , next) => {
 }
 
 ========================================================================
-controllers\bookCopy.controller.js
+controllers/bookCopy.controller.js
 ========================================================================
 
 const bookCopyService = require('../services/bookCopy.service');
@@ -401,7 +400,7 @@ exports.deleteBookCopy = async (req ,res , next) => {
 }
 
 ========================================================================
-controllers\genre.controller.js
+controllers/genre.controller.js
 ========================================================================
 
 const genreService = require('../services/genre.service');
@@ -485,7 +484,7 @@ exports.deleteGenre = async (req, res , next) => {
 }
 
 ========================================================================
-controllers\loan.controller.js
+controllers/loan.controller.js
 ========================================================================
 
 const loanService = require("../services/loan.service");
@@ -550,7 +549,7 @@ exports.showLoanById = async (req, res, next) => {
 };
 
 ========================================================================
-controllers\user.controller.js
+controllers/user.controller.js
 ========================================================================
 
 const userService = require('../services/user.service');
@@ -647,7 +646,7 @@ exports.deleteFavoriteBook = async (req, res, next) => {
 };
 
 ========================================================================
-middleware\auth.js
+middleware/auth.js
 ========================================================================
 
 const jwt = require('jsonwebtoken');
@@ -688,7 +687,7 @@ exports.adminonly =(req , res , next) => {
 }
 
 ========================================================================
-middleware\checkOwnershipOrAdmin.js
+middleware/checkOwnershipOrAdmin.js
 ========================================================================
 
 exports.checkOwnershipOrAdmin = (req, res, next) => {
@@ -711,7 +710,7 @@ exports.checkOwnershipOrAdmin = (req, res, next) => {
 };
 
 ========================================================================
-middleware\errorHandler.js
+middleware/errorHandler.js
 ========================================================================
 
 // Error handler middleware
@@ -749,7 +748,7 @@ const errorHandler = (err, req, res, next) => {
 module.exports = errorHandler;
 
 ========================================================================
-middleware\idParamValidation.js
+middleware/idParamValidation.js
 ========================================================================
 
 
@@ -768,7 +767,7 @@ const validateId = (req, res, next) => {
 module.exports = { validateId };
 
 ========================================================================
-middleware\limiter.js
+middleware/limiter.js
 ========================================================================
 
 const limiter = require('express-rate-limit');
@@ -809,7 +808,7 @@ exports.defaultLimiter = limiter({
 })
 
 ========================================================================
-middleware\validate.js
+middleware/validate.js
 ========================================================================
 
 const { ZodError } = require("zod");
@@ -833,7 +832,7 @@ const validate = (schema, property = "body") => (req, res, next) => {
 module.exports = validate;
 
 ========================================================================
-models\Authors.js
+models/Authors.js
 ========================================================================
 
 const { DataTypes } = require('sequelize');
@@ -863,7 +862,7 @@ const Authors = sequelize.define('Authors', {
 module.exports = Authors;
 
 ========================================================================
-models\BookCopy.js
+models/BookCopy.js
 ========================================================================
 
 const { DataTypes } = require("sequelize");
@@ -906,7 +905,7 @@ const BookCopy = sequelize.define("BookCopy", {
 module.exports = BookCopy;
 
 ========================================================================
-models\BookGenres.js
+models/BookGenres.js
 ========================================================================
 
 const {sequelize} = require("../config/sequelize.config");
@@ -927,7 +926,7 @@ const BookGenre = sequelize.define(
 module.exports = BookGenre;
 
 ========================================================================
-models\Books.js
+models/Books.js
 ========================================================================
 
 const { DataTypes } = require("sequelize");
@@ -972,7 +971,7 @@ const Books = sequelize.define(
 module.exports = Books;
 
 ========================================================================
-models\FavoriteBooks.js
+models/FavoriteBooks.js
 ========================================================================
 
 const { DataTypes } = require("sequelize");
@@ -1001,7 +1000,7 @@ const FavoriteBooks = sequelize.define(
 module.exports = FavoriteBooks;
 
 ========================================================================
-models\Genres.js
+models/Genres.js
 ========================================================================
 
 const { DataTypes } = require('sequelize');
@@ -1039,13 +1038,13 @@ const Genres = sequelize.define('Genres', {
 module.exports = Genres;
 
 ========================================================================
-models\Index.js
+models/Index.js
 ========================================================================
 
-const Authors = require("./authors");
+const Authors = require("./Authors");
 const Books = require("./Books");
-const Genres = require("./genres");
-const BookGenres = require("./bookGenres");
+const Genres = require("./Genres");
+const BookGenres = require("./BookGenres");
 const Users = require("./Users");
 const RefreshToken = require("./RefreshToken");
 const FavoriteBooks = require("./FavoriteBooks");
@@ -1118,7 +1117,7 @@ const models = {
 module.exports = models;
 
 ========================================================================
-models\Loan.js
+models/Loan.js
 ========================================================================
 
 const { DataTypes } = require("sequelize");
@@ -1187,7 +1186,7 @@ const Loan = sequelize.define(
 module.exports = Loan;
 
 ========================================================================
-models\RefreshToken.js
+models/RefreshToken.js
 ========================================================================
 
 const { DataTypes } = require('sequelize');
@@ -1219,7 +1218,7 @@ const RefreshToken = sequelize.define('RefreshToken', {
 module.exports = RefreshToken;
 
 ========================================================================
-models\Users.js
+models/Users.js
 ========================================================================
 
 const { DataTypes } = require('sequelize');
@@ -1266,7 +1265,62 @@ const Users = sequelize.define('Users', {
 module.exports = Users;
 
 ========================================================================
-routes\admin.routes.js
+routes/Index.js
+========================================================================
+
+const express = require('express');
+const router = express.Router();
+
+
+const authorsRouter = require('../routes/authors.routes');
+const booksRouter = require('../routes/books.routes');
+const genresRouter = require('../routes/genres.routes');
+const usersRouter = require('../routes/users.routes');
+const authRouter = require('../routes/auth.routes');
+const adminRouter = require('../routes/admin.routes');
+const loanRouter = require('../routes/loanRoute.routes');
+
+
+const { defaultLimiter } = require('../middleware/limiter');
+const { authMiddleware,adminonly } = require('../middleware/auth');
+const errorHandler = require('../middleware/errorHandler');        
+
+
+const path = require('path');
+
+
+
+router.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
+
+router.use('/', defaultLimiter);
+router.use('/', booksRouter);
+router.use('/', authorsRouter);
+router.use('/', genresRouter);
+router.use('/', usersRouter);
+router.use('/', loanRouter);
+
+router.use('//admin',authMiddleware, adminonly, adminRouter);
+router.use('/', authRouter);
+
+
+
+router.use((req, res, next) => {
+    const error = new Error(`Route ${req.originalUrl} not found`);
+    error.status = 404;
+    next(error);
+});
+
+
+router.use(errorHandler);
+
+
+
+module.exports = router;
+
+========================================================================
+routes/admin.routes.js
 ========================================================================
 
 const express = require('express');
@@ -1309,7 +1363,7 @@ router.get('/book-copies/:id', validateId,  bookCopyController.getBookCopyById )
 module.exports = router;
 
 ========================================================================
-routes\auth.routes.js
+routes/auth.routes.js
 ========================================================================
 
 const express = require('express');
@@ -1351,7 +1405,7 @@ router.post('/auth/logout', authController.logoutUser);
 module.exports = router;
 
 ========================================================================
-routes\authors.routes.js
+routes/authors.routes.js
 ========================================================================
 
 const express = require('express');
@@ -1387,7 +1441,7 @@ router.delete('/authors/:id',authMiddleware,adminonly, validateId, authorControl
 module.exports = router;
 
 ========================================================================
-routes\books.routes.js
+routes/books.routes.js
 ========================================================================
 
 const express = require('express');
@@ -1409,7 +1463,7 @@ router.get('/books/:id', validateId,  bookController.getBookById )
 module.exports = router;
 
 ========================================================================
-routes\genres.routes.js
+routes/genres.routes.js
 ========================================================================
 
 const express = require('express');
@@ -1443,62 +1497,7 @@ router.delete('/genres/:id',authMiddleware,adminonly, validateId, genreControlle
 module.exports = router;
 
 ========================================================================
-routes\Index.js
-========================================================================
-
-const express = require('express');
-const router = express.Router();
-
-
-const authorsRouter = require('../routes/authors.routes');
-const booksRouter = require('../routes/books.routes');
-const genresRouter = require('../routes/genres.routes');
-const usersRouter = require('../routes/users.routes');
-const authRouter = require('../routes/auth.routes');
-const adminRouter = require('../routes/admin.routes');
-const loanRouter = require('../routes/loanRoute.routes');
-
-
-const { defaultLimiter } = require('../middleware/limiter');
-const { authMiddleware,adminonly } = require('../middleware/auth');
-const errorHandler = require('../middleware/errorHandler');        
-
-
-const path = require('path');
-
-
-
-router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
-});
-
-router.use('/api', defaultLimiter);
-router.use('/api', booksRouter);
-router.use('/api', authorsRouter);
-router.use('/api', genresRouter);
-router.use('/api', usersRouter);
-router.use('/api', loanRouter);
-
-router.use('/api/admin',authMiddleware, adminonly, adminRouter);
-router.use('/api', authRouter);
-
-
-
-router.use((req, res, next) => {
-    const error = new Error(`Route ${req.originalUrl} not found`);
-    error.status = 404;
-    next(error);
-});
-
-
-router.use(errorHandler);
-
-
-
-module.exports = router;
-
-========================================================================
-routes\loanRoute.routes.js
+routes/loanRoute.routes.js
 ========================================================================
 
 const express = require("express");
@@ -1547,7 +1546,7 @@ router.get("/admin/loan/:id",authMiddleware,adminonly, loanController.showLoanBy
 module.exports = router;
 
 ========================================================================
-routes\users.routes.js
+routes/users.routes.js
 ========================================================================
 
 const express = require('express');
@@ -1590,7 +1589,7 @@ router.delete('/users/me/favorite-books/:bookId',authMiddleware, userController.
 module.exports = router;
 
 ========================================================================
-schemas\author.schema.js
+schemas/author.schema.js
 ========================================================================
 
 const { z } = require("zod");
@@ -1608,7 +1607,7 @@ exports.createAuthorSchema = z.object({
 exports.updateAuthorSchema = exports.createAuthorSchema.partial();
 
 ========================================================================
-schemas\book.schema.js
+schemas/book.schema.js
 ========================================================================
 
 const { z } = require("zod");
@@ -1633,7 +1632,7 @@ exports.createBookSchema = z.object({
 exports.updateBookSchema = exports.createBookSchema.partial();
 
 ========================================================================
-schemas\bookCopy.schema.js
+schemas/bookCopy.schema.js
 ========================================================================
 
 const { z } = require("zod");
@@ -1649,7 +1648,7 @@ exports.createBookCopySchema = z.object({
 exports.updateBookCopySchema = exports.createBookCopySchema.partial();
 
 ========================================================================
-schemas\favoriteBook.schema.js
+schemas/favoriteBook.schema.js
 ========================================================================
 
 const { z } = require("zod");
@@ -1661,7 +1660,7 @@ exports.createFavoriteBookSchema = z.object({
 });
 
 ========================================================================
-schemas\genre.schema.js
+schemas/genre.schema.js
 ========================================================================
 
 const { z } = require("zod");
@@ -1675,7 +1674,7 @@ exports.createGenreSchema = z.object({
 exports.updateGenreSchema = exports.createGenreSchema.partial();
 
 ========================================================================
-schemas\loan.schema.js
+schemas/loan.schema.js
 ========================================================================
 
 const { z } = require("zod");
@@ -1715,7 +1714,7 @@ exports.updateLoanSchema = z.object({
 }).partial();
 
 ========================================================================
-schemas\user.schema.js
+schemas/user.schema.js
 ========================================================================
 
 const { z } = require("zod");
@@ -1786,7 +1785,7 @@ app.listen(PORT, () => {
 });
 
 ========================================================================
-services\auth.service.js
+services/auth.service.js
 ========================================================================
 
 const { Users, RefreshToken } = require("../models/Index");
@@ -1939,8 +1938,8 @@ exports.refreshAccessToken = async (oldRefreshTokenValue) => {
 
   return {
     accessToken,
-    refreshToken: newRefreshTokenValue,
-    expiresAt: newExpiresAt,
+    newRefreshTokenValue,
+    newExpiresAt
   };
 };
 
@@ -1970,7 +1969,7 @@ exports.updateUser = async (userId, user) => {
 };
 
 ========================================================================
-services\authors.service.js
+services/authors.service.js
 ========================================================================
 
 const { Authors } = require('../models/Index');
@@ -2025,7 +2024,7 @@ exports.deleteAuthor = async (id) => {
 }
 
 ========================================================================
-services\book.service.js
+services/book.service.js
 ========================================================================
 
 const { Books, Authors, Genres } = require("../models/Index");
@@ -2156,7 +2155,7 @@ exports.deleteBook = async (id) => {
 }
 
 ========================================================================
-services\bookCopy.service.js
+services/bookCopy.service.js
 ========================================================================
 
 const { BookCopy , Books } = require('../models/Index');
@@ -2226,7 +2225,7 @@ exports.deleteBookCopy = async (id) => {
 }
 
 ========================================================================
-services\genre.service.js
+services/genre.service.js
 ========================================================================
 
 const { Genres } = require('../models/Index');
@@ -2292,7 +2291,7 @@ exports.deleteGenre = async (id) => {
 }
 
 ========================================================================
-services\loan.service.js
+services/loan.service.js
 ========================================================================
 
 const { Loan, BookCopy, Users, Books } = require("../models/Index");
@@ -2507,7 +2506,7 @@ module.exports = {
 };
 
 ========================================================================
-services\user.service.js
+services/user.service.js
 ========================================================================
 
 const { Users ,Books ,FavoriteBooks } = require("../models/Index");

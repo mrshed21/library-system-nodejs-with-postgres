@@ -1,6 +1,7 @@
 const authService = require("../services/auth.service");
 const userService = require("../services/user.service");
 
+// create user
 exports.createUser = async (req, res, next) => {
   const { name, email, password } = req.body;
   try {
@@ -24,6 +25,7 @@ exports.createUser = async (req, res, next) => {
     next(error);
   }
 };
+// login user
 exports.loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   try {
@@ -48,6 +50,7 @@ exports.loginUser = async (req, res, next) => {
   }
 };
 
+// refresh token
 exports.refreshToken = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken;
@@ -76,6 +79,7 @@ exports.refreshToken = async (req, res, next) => {
   }
 };
 
+// logout user
 exports.logoutUser = async (req, res, next) => {
   try {
     const { refreshToken } = req.cookies;
@@ -104,9 +108,16 @@ exports.logoutUser = async (req, res, next) => {
   }
 };
 
+// get me from userService
 exports.getMe = async (req, res, next) => {
   try {
     const userId = req.user.id;
+
+    if (!userId) {
+      const error = new Error("User not found");
+      error.status = 404;
+      throw error;
+    }
 
     const user = await userService.getUserById(userId);
 
@@ -124,6 +135,12 @@ exports.updateUser = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const { name, email } = req.body;
+
+    if (!name && !email) {
+      const error = new Error("No data provided to update");
+      error.status = 400;
+      throw error;
+    }
 
     const updatedUser = await authService.updateUser(userId, { name, email });
 

@@ -30,11 +30,8 @@ exports.getUserById = async (id) => {
         error.status = 404;
         throw error;
     }
-    return {
-        success: true,
-        message: 'User fetched successfully',
-        data: user
-    };
+    return  user
+    
 };
 
 

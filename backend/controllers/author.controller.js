@@ -37,7 +37,7 @@ exports.createAuthor = async (req, res, next) => {
         throw error;
     }
     try {
-        const author = await authorService.createAuthor(req.body);
+        const author = await authorService.createAuthor(name , year_of_birth);
         res.json({
             success: true,
             message: 'Author created successfully',
@@ -50,8 +50,14 @@ exports.createAuthor = async (req, res, next) => {
 
 // update author
 exports.updateAuthor = async (req, res, next) => {
+    const { name, year_of_birth } = req.body; 
+    if (!name && !year_of_birth) {
+        const error = new Error('No data to update');
+        error.statusCode = 400;
+        throw error;
+    }
     try {
-        const author = await authorService.updateAuthor(req.params.id, req.body);
+        const author = await authorService.updateAuthor(req.params.id, {name , year_of_birth});
         res.json({
             success: true,
             message: 'Author updated successfully',
