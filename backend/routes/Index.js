@@ -31,7 +31,7 @@ router.use('/', genresRouter);
 router.use('/', usersRouter);
 router.use('/', loanRouter);
 
-router.use('//admin',authMiddleware, adminonly, adminRouter);
+router.use('/admin',authMiddleware, adminonly, adminRouter);
 router.use('/', authRouter);
 
 

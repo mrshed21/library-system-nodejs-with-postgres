@@ -174,6 +174,7 @@ exports.updateUser = async (userId, userdata) => {
     const error = new Error("User not found");
     error.status = 404;
     throw error;
+  }
   
   const {id , name , email , role , isActive} = updatedUser[0];
   return {id , name , email , role , isActive}

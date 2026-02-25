@@ -5,6 +5,8 @@ const LOAN_DURATION = 30; // 30 days
 const DAILY_FINE = 1;
 const MAX_ACTIVE_LOANS = 3;
 
+
+
 const createLoan = async (user_id, book_id) => {
   const t = await sequelize.transaction();
   try {
@@ -189,7 +191,7 @@ const showAllLoans = async () => {
 }
 
 const showLoanById = async (id)=> {
-    const loan = await Loan.findByPk(id , );
+    const loan = await Loan.findByPk(id );
     if (!loan) {
         const error = new Error("Loan not found");
         error.status = 404;

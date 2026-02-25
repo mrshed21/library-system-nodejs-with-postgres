@@ -9,7 +9,7 @@ exports.getBooks = async (query) => {
         whereClause.author_id = authorId;
     }
     const offset = (page - 1) * limit;
-    const books = await Books.findAndCountAll({
+    const { rows: data, count: total } = await Books.findAndCountAll({
         where: whereClause,
         include: [{
             model: Authors,
@@ -25,20 +25,19 @@ exports.getBooks = async (query) => {
         order: [['id', 'ASC']]
 
     });
-    if (books.rows.length === 0) {
+    if (data.length === 0) {
         const error =  new Error('No books found');
         error.status = 404;
         throw error;
     }
     return {
-        success: true,
-        message: 'Books fetched successfully',
-        data: books.rows,
+       
+        data,
         meta: {
-            total: books.count,
+            total: total,
             page: page,
             limit: limit,
-            totalPages: Math.ceil(books.count / limit)
+            totalPages: Math.ceil(total / limit)
         }
     }
 }
@@ -122,5 +121,5 @@ exports.deleteBook = async (id) => {
         throw error; 
     }
     await book.destroy();
-    return { message: 'Book deleted' };
+    return book;
 }

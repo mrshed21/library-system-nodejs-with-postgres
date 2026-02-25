@@ -2,7 +2,7 @@ const { BookCopy , Books } = require('../models/Index');
 
 // get all bookCopy 
 exports.getAllBookCopiesWithBook  = async (limit , offset) => {
-    const bookCopy = await BookCopy.findAndCountAll({
+    const { rows: bookCopy, count } = await BookCopy.findAndCountAll({
         include: [
             {
                 model: Books,
@@ -12,7 +12,7 @@ exports.getAllBookCopiesWithBook  = async (limit , offset) => {
         limit,
         offset
     })
-    return { bookCopy , count: bookCopy.count }
+    return { bookCopy , count }
 }
 
 // get bookCopy by id

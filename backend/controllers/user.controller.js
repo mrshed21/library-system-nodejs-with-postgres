@@ -3,7 +3,11 @@ const userService = require('../services/user.service');
 exports.getUsers = async (req, res, next) => {
     try {
         const users = await userService.getUsers();
-        res.json(users);
+        res.json({
+            success: true,
+            message: 'Users fetched successfully',
+            data: users
+        });
     } catch (error) {
         next(error);
     }
@@ -11,18 +15,28 @@ exports.getUsers = async (req, res, next) => {
 exports.getUserById = async (req, res, next) => {
     try {
         const user = await userService.getUserById(req.params.id);
-        res.json(user);
+        res.json({
+            success: true,
+            message: 'User fetched successfully',
+            data: user
+        });
     } catch (error) {
         next(error);
     }
 };
 
+
+// update user by user.id
 exports.updateUser = async (req, res, next) => {
     const userId = req.user.id;
     const { name , email  } = req.body;
     try {
         const user = await userService.updateUser(userId, { name , email });
-        res.json(user);
+        res.json({
+            success: true,
+            message: 'User updated successfully',
+            data: user
+        });
     } catch (error) {
         next(error);
     }
@@ -30,7 +44,11 @@ exports.updateUser = async (req, res, next) => {
 exports.deleteUser = async (req, res, next) => {
     try {
         const user = await userService.deleteUser(req.params.id);
-        res.json(user);
+        res.json({
+            success: true,
+            message: 'User deleted successfully',
+            data: user
+        });
     } catch (error) {
         next(error);
     }
@@ -84,7 +102,7 @@ exports.deleteFavoriteBook = async (req, res, next) => {
         res.json({
             success: true,
             message: 'Favorite book deleted successfully',
-            data: { message: 'Favorite book deleted successfully' }
+            data: { message: 'Favorite book deleted successfully' , deletedFavoriteBook}
         });
     } catch (error) {
         next(error);

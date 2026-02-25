@@ -13,11 +13,8 @@ exports.getUsers = async () => {
         error.status = 404;
         throw error;
     }
-    return { 
-        success: true, 
-        message: 'Users fetched successfully',
-        data: users 
-    };
+    return users 
+
 };
 
 // get user by id
@@ -52,11 +49,8 @@ exports.updateUser = async (id, user) => {
     }
 const { name, email,  isActive } = updatedRows[0];
 
-    return {
-        success: true,
-        message: 'User updated successfully',
-        data: {id ,name,email,isActive}
-    };
+    return {id ,name,email,isActive}
+   
 };
 
 // delete user
@@ -71,11 +65,7 @@ exports.deleteUser = async (id) => {
         error.status = 404;
         throw error;
     }
-    return {
-        success: true,
-        message: 'User deleted successfully',
-        data: deletedUser
-    };
+    return deletedUser;
 };
 
 

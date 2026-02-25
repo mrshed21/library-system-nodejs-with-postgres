@@ -1,19 +1,19 @@
 const bookCopyService = require('../services/bookCopy.service');
 
-
+// get all bookCopy
 exports.getAllBookCopiesWithBook = async (req, res, next) => {
     try {
         const limit = parseInt(req.query.limit) || 10;
         const offset = parseInt(req.query.offset) || 0;
-        const bookCopies = await bookCopyService.getAllBookCopiesWithBook(limit, offset);
+        const { bookCopy, count } = await bookCopyService.getAllBookCopiesWithBook(limit, offset);
         res.json({
             success: true , 
             message: 'bookCopies fetched successfully',
-            data: bookCopies.bookCopy,
+            data: bookCopy,
             meta: {
                 limit,
                 offset,
-                total: bookCopies.count
+                total: count
             }
 
         });
@@ -22,6 +22,7 @@ exports.getAllBookCopiesWithBook = async (req, res, next) => {
     }
 }
 
+// get bookCopy by id
 exports.getBookCopyById = async (req, res   , next) => {
     try {
         const bookCopy = await bookCopyService.getBookCopyById(req.params.id);
@@ -35,6 +36,8 @@ exports.getBookCopyById = async (req, res   , next) => {
     }
 }
 
+
+// create bookCopy
 exports.createBookCopy = async (req, res, next) => {
     try {
     const { book_id, conditionStatus, shelfLocation } = req.body;
@@ -48,6 +51,7 @@ exports.createBookCopy = async (req, res, next) => {
 }
 
 
+// update bookCopy
 exports.updateBookCopy = async (req , res, next) => {
     try {
         const { id } = req.params;

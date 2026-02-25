@@ -25,7 +25,11 @@ exports.showUserLoans = async (req, res, next) => {
   try {
     const user_id = req.user.id;
     const loans = await loanService.showUserLoans(user_id);
-    res.json({ success: true, data: loans });
+    res.json({ 
+      success: true,
+      message: 'Loans fetched successfully',
+      data: loans 
+    });
   } catch (error) {
     next(error);
   }
@@ -35,7 +39,11 @@ exports.showUserLoanById = async (req, res, next) => {
   try {
     const user_id = req.user.id;
     const loan = await loanService.showUserLoanById(user_id, req.params.id);
-    res.json({ success: true, data: loan });
+    res.json({ 
+      success: true,
+      message: 'Loan fetched successfully',
+      data: loan 
+    });
   } catch (error) {
     next(error);
   }
@@ -45,7 +53,11 @@ exports.showUserLoanById = async (req, res, next) => {
 exports.showAllLoans = async (req, res, next) => {
   try {
     const loans = await loanService.showAllLoans();
-    res.json({ success: true, data: loans });
+    res.json({ 
+      success: true,
+      message: 'Loans fetched successfully',
+      data: loans 
+    });
   } catch (error) {
     next(error);
   }
@@ -53,7 +65,11 @@ exports.showAllLoans = async (req, res, next) => {
 exports.showLoanById = async (req, res, next) => {
   try {
     const loan = await loanService.showLoanById(req.params.id);
-    res.json({ success: true, data: loan });
+    res.json({ 
+      success: true,
+      message: 'Loan fetched successfully',
+      data: loan 
+    });
   } catch (error) {
     next(error);
   }

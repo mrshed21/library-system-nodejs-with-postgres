@@ -1,6 +1,8 @@
 const genreService = require('../services/genre.service');
 
 
+
+// get all genres
 exports.getGenres = async (req ,res ,next ) => {
     try {
         const genres = await genreService.getGenres();
