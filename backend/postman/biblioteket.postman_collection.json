@@ -26,7 +26,7 @@
                     "header": [
                       {
                         "key": "Authorization",
-                        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE4ODU1LCJleHAiOjE3NzEzMjI0NTV9.TE8cC4116nTlGA5nDEKwjAtbRcrKz3KoYCzrLU4Y34U",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                       }
                     ],
@@ -35,11 +35,10 @@
                       "raw": "{\r\n    \"bookData\" : {\r\n                    \"name\" : \"updated book with service controll\"  ,\r\n                    \"genre_ids\" :[3,4]\r\n                }\r\n}"
                     },
                     "url": {
-                      "raw": "localhost:4000/api/admin/book-copies",
+                      "raw": "{{url}}/api/admin/book-copies",
                       "host": [
-                        "localhost"
+                        "{{url}}"
                       ],
-                      "port": "4000",
                       "path": [
                         "api",
                         "admin",
@@ -56,7 +55,7 @@
                     "header": [
                       {
                         "key": "Authorization",
-                        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE4ODU1LCJleHAiOjE3NzEzMjI0NTV9.TE8cC4116nTlGA5nDEKwjAtbRcrKz3KoYCzrLU4Y34U",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                       }
                     ],
@@ -70,11 +69,10 @@
                       }
                     },
                     "url": {
-                      "raw": "localhost:4000/api/admin/book-copies",
+                      "raw": "{{url}}/api/admin/book-copies",
                       "host": [
-                        "localhost"
+                        "{{url}}"
                       ],
-                      "port": "4000",
                       "path": [
                         "api",
                         "admin",
@@ -91,7 +89,7 @@
                     "header": [
                       {
                         "key": "Authorization",
-                        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE4ODU1LCJleHAiOjE3NzEzMjI0NTV9.TE8cC4116nTlGA5nDEKwjAtbRcrKz3KoYCzrLU4Y34U",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                       }
                     ],
@@ -105,11 +103,10 @@
                       }
                     },
                     "url": {
-                      "raw": "localhost:4000/api/admin/book-copies/101",
+                      "raw": "{{url}}/api/admin/book-copies/101",
                       "host": [
-                        "localhost"
+                        "{{url}}"
                       ],
-                      "port": "4000",
                       "path": [
                         "api",
                         "admin",
@@ -127,7 +124,7 @@
                     "header": [
                       {
                         "key": "Authorization",
-                        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE4ODU1LCJleHAiOjE3NzEzMjI0NTV9.TE8cC4116nTlGA5nDEKwjAtbRcrKz3KoYCzrLU4Y34U",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                       }
                     ],
@@ -141,16 +138,15 @@
                       }
                     },
                     "url": {
-                      "raw": "localhost:4000/api/admin/book-copies/101",
+                      "raw": "{{url}}/api/admin/book-copies/102",
                       "host": [
-                        "localhost"
+                        "{{url}}"
                       ],
-                      "port": "4000",
                       "path": [
                         "api",
                         "admin",
                         "book-copies",
-                        "101"
+                        "102"
                       ]
                     }
                   },
@@ -166,7 +162,7 @@
                     "header": [
                       {
                         "key": "Authorization",
-                        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE4ODU1LCJleHAiOjE3NzEzMjI0NTV9.TE8cC4116nTlGA5nDEKwjAtbRcrKz3KoYCzrLU4Y34U",
+                        "value": "Bearer {{token}}",
                         "type": "text"
                       }
                     ],
@@ -175,16 +171,15 @@
                       "raw": "{\r\n    \"bookData\" : {\r\n                    \"name\" : \"updated book with service controll\"  ,\r\n                    \"genre_ids\" :[3,4]\r\n                }\r\n}"
                     },
                     "url": {
-                      "raw": "localhost:4000/api/admin/book-copies/100",
+                      "raw": "{{url}}/api/admin/book-copies/10",
                       "host": [
-                        "localhost"
+                        "{{url}}"
                       ],
-                      "port": "4000",
                       "path": [
                         "api",
                         "admin",
                         "book-copies",
-                        "100"
+                        "10"
                       ]
                     }
                   },
@@ -199,7 +194,7 @@
                 "header": [
                   {
                     "key": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE1MTAyLCJleHAiOjE3NzEzMTg3MDJ9.prNPOQQ2BVhLfdZe7RI0b_qS9J0zIdggfEgQI96wn2k",
+                    "value": "Bearer {{token}}",
                     "type": "text"
                   }
                 ],
@@ -213,16 +208,15 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:4000/api/admin/books/25",
+                  "raw": "{{url}}/api/admin/books/260",
                   "host": [
-                    "localhost"
+                    "{{url}}"
                   ],
-                  "port": "4000",
                   "path": [
                     "api",
                     "admin",
                     "books",
-                    "25"
+                    "260"
                   ]
                 }
               },
@@ -235,7 +229,7 @@
                 "header": [
                   {
                     "key": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE1MTAyLCJleHAiOjE3NzEzMTg3MDJ9.prNPOQQ2BVhLfdZe7RI0b_qS9J0zIdggfEgQI96wn2k",
+                    "value": "Bearer {{token}}",
                     "type": "text"
                   }
                 ],
@@ -249,16 +243,15 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:4000/api/admin/books/25",
+                  "raw": "{{url}}/api/admin/books/26",
                   "host": [
-                    "localhost"
+                    "{{url}}"
                   ],
-                  "port": "4000",
                   "path": [
                     "api",
                     "admin",
                     "books",
-                    "25"
+                    "26"
                   ]
                 }
               },
@@ -271,7 +264,7 @@
                 "header": [
                   {
                     "key": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE1MTAyLCJleHAiOjE3NzEzMTg3MDJ9.prNPOQQ2BVhLfdZe7RI0b_qS9J0zIdggfEgQI96wn2k",
+                    "value": "Bearer {{token}}",
                     "type": "text"
                   }
                 ],
@@ -285,11 +278,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:4000/api/admin/books",
+                  "raw": "{{url}}/api/admin/books",
                   "host": [
-                    "localhost"
+                    "{{url}}"
                   ],
-                  "port": "4000",
                   "path": [
                     "api",
                     "admin",
@@ -307,28 +299,34 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "localhost:4000/api/books?page=1&limit=5",
+              "raw": "{{url}}/api/books?page=3",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "books"
               ],
               "query": [
                 {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
                   "key": "limit",
-                  "value": "5"
+                  "value": "5",
+                  "disabled": true
                 },
                 {
                   "key": "authorId",
-                  "value": "3",
+                  "value": "213213",
                   "disabled": true
+                },
+                {
+                  "key": "name",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "3"
                 }
               ]
             }
@@ -341,15 +339,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "localhost:4000/api/books/12",
+              "raw": "{{url}}/api/books/27",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "books",
-                "12"
+                "27"
               ]
             }
           },
@@ -373,14 +370,23 @@
               "raw": "{\r\n    \"genre_ids\" :[1,2]\r\n}"
             },
             "url": {
-              "raw": "localhost:4000/api/authors",
+              "raw": "{{url}}/api/authors?page=1&name=lsöadkjflöasdjkf",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "authors"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "name",
+                  "value": "lsöadkjflöasdjkf"
+                }
               ]
             }
           },
@@ -399,15 +405,14 @@
               "raw": "{\r\n    \"genre_ids\" :[1,2]\r\n}"
             },
             "url": {
-              "raw": "localhost:4000/api/authors/15",
+              "raw": "{{url}}/api/authors/1",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "authors",
-                "15"
+                "1"
               ]
             }
           },
@@ -420,7 +425,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMTQwMDQ1LCJleHAiOjE3NzExNDM2NDV9.UwjXk8Bg7hu6gj5F6tCW7_A63s7unjXEX5WlDbjsThI",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
@@ -434,11 +439,10 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/authors",
+              "raw": "{{url}}/api/authors",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "authors"
@@ -454,7 +458,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMTQwMDQ1LCJleHAiOjE3NzExNDM2NDV9.UwjXk8Bg7hu6gj5F6tCW7_A63s7unjXEX5WlDbjsThI",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
@@ -468,15 +472,14 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/authors/15",
+              "raw": "{{url}}/api/authors/17",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "authors",
-                "15"
+                "17"
               ]
             }
           },
@@ -489,7 +492,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMTQwMDQ1LCJleHAiOjE3NzExNDM2NDV9.UwjXk8Bg7hu6gj5F6tCW7_A63s7unjXEX5WlDbjsThI",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
@@ -503,15 +506,14 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/authors/15",
+              "raw": "{{url}}/api/authors/17",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "authors",
-                "15"
+                "17"
               ]
             }
           },
@@ -528,14 +530,21 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "localhost:4000/api/genres",
+              "raw": "{{url}}/api/genres",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "genres"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "slödkjfsdlfj",
+                  "type": "text",
+                  "disabled": true
+                }
               ]
             }
           },
@@ -547,15 +556,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "localhost:4000/api/genres/11",
+              "raw": "{{url}}/api/genres/1",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "genres",
-                "11"
+                "1"
               ]
             }
           },
@@ -568,7 +576,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMTQwMDQ1LCJleHAiOjE3NzExNDM2NDV9.UwjXk8Bg7hu6gj5F6tCW7_A63s7unjXEX5WlDbjsThI",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
@@ -582,11 +590,10 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/genres",
+              "raw": "{{url}}/api/genres",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "genres"
@@ -602,7 +609,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMTQwMDQ1LCJleHAiOjE3NzExNDM2NDV9.UwjXk8Bg7hu6gj5F6tCW7_A63s7unjXEX5WlDbjsThI",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
@@ -616,15 +623,14 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/genres/11",
+              "raw": "{{url}}/api/genres/12",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "genres",
-                "11"
+                "12"
               ]
             }
           },
@@ -637,20 +643,19 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMTQwMDQ1LCJleHAiOjE3NzExNDM2NDV9.UwjXk8Bg7hu6gj5F6tCW7_A63s7unjXEX5WlDbjsThI",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "localhost:4000/api/genres/11",
+              "raw": "{{url}}/api/genres/12",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "genres",
-                "11"
+                "12"
               ]
             }
           },
@@ -671,16 +676,15 @@
                 "header": [
                   {
                     "key": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzEzMjE0MzgsImV4cCI6MTc3MTMyNTAzOH0.Umh7UE9_2LiXdISQM3SAK0ZQmtKeS0U-bnuRAn_BYow",
+                    "value": "Bearer {{token}}",
                     "type": "text"
                   }
                 ],
                 "url": {
-                  "raw": "localhost:4000/api/users/me/favorite-books",
+                  "raw": "{{url}}/api/users/me/favorite-books",
                   "host": [
-                    "localhost"
+                    "{{url}}"
                   ],
-                  "port": "4000",
                   "path": [
                     "api",
                     "users",
@@ -705,13 +709,13 @@
                 "header": [
                   {
                     "key": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzEzMjE0MzgsImV4cCI6MTc3MTMyNTAzOH0.Umh7UE9_2LiXdISQM3SAK0ZQmtKeS0U-bnuRAn_BYow",
+                    "value": "Bearer {{token}}",
                     "type": "text"
                   }
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"book_id\"  :16\n\n\n}",
+                  "raw": "{\n    \"book_id\"  :6\n\n\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -719,11 +723,10 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:4000/api/users/me/favorite-books",
+                  "raw": "{{url}}/api/users/me/favorite-books",
                   "host": [
-                    "localhost"
+                    "{{url}}"
                   ],
-                  "port": "4000",
                   "path": [
                     "api",
                     "users",
@@ -741,7 +744,7 @@
                 "header": [
                   {
                     "key": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMzE4ODU1LCJleHAiOjE3NzEzMjI0NTV9.TE8cC4116nTlGA5nDEKwjAtbRcrKz3KoYCzrLU4Y34U",
+                    "value": "Bearer {{token}}",
                     "type": "text"
                   }
                 ],
@@ -755,17 +758,16 @@
                   }
                 },
                 "url": {
-                  "raw": "localhost:4000/api/users/me/favorite-books/13",
+                  "raw": "{{url}}/api/users/me/favorite-books/2",
                   "host": [
-                    "localhost"
+                    "{{url}}"
                   ],
-                  "port": "4000",
                   "path": [
                     "api",
                     "users",
                     "me",
                     "favorite-books",
-                    "13"
+                    "2"
                   ]
                 }
               },
@@ -780,19 +782,30 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMTQwMDQ1LCJleHAiOjE3NzExNDM2NDV9.UwjXk8Bg7hu6gj5F6tCW7_A63s7unjXEX5WlDbjsThI",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "localhost:4000/api/users",
+              "raw": "{{url}}/api/users?page=2",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "users"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "usersdfsdf",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "2",
+                  "type": "text"
+                }
               ]
             }
           },
@@ -808,7 +821,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMTQwMDQ1LCJleHAiOjE3NzExNDM2NDV9.UwjXk8Bg7hu6gj5F6tCW7_A63s7unjXEX5WlDbjsThI",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
@@ -817,15 +830,14 @@
               "raw": "{\n \"name\" : \"new user 3f\"   , \"email\": \"emai2l23@damil.com\", \"password\": \"1342werg\"\n}"
             },
             "url": {
-              "raw": "localhost:4000/api/users/12",
+              "raw": "{{url}}/api/users/11",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "users",
-                "12"
+                "11"
               ]
             }
           },
@@ -838,13 +850,13 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMTQwMDQ1LCJleHAiOjE3NzExNDM2NDV9.UwjXk8Bg7hu6gj5F6tCW7_A63s7unjXEX5WlDbjsThI",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\" : \"updated user\"   ,\n    \"email\": \"emai2al23@damil.com\",\n    \"password\": \"afaa\"\n}",
+              "raw": "{\n    \"name\" : \"updated user\"   ,\n    \"email\": \"user5@user.com\",\n    \"password\": \"afaa\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -852,11 +864,10 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/users/12",
+              "raw": "{{url}}/api/users/12",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "users",
@@ -873,7 +884,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMTQwMDQ1LCJleHAiOjE3NzExNDM2NDV9.UwjXk8Bg7hu6gj5F6tCW7_A63s7unjXEX5WlDbjsThI",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
@@ -887,15 +898,14 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/users/12",
+              "raw": "{{url}}/api/users/26",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "users",
-                "12"
+                "26"
               ]
             }
           },
@@ -908,12 +918,26 @@
       "item": [
         {
           "name": "login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = JSON.parse(responseBody)\r",
+                  "pm.environment.set(\"token\", jsonData.token)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"user4@user.com\",\n    \"password\": \"123456\"\n}",
+              "raw": "{\n    \"email\": \"user5@user.com\",\n    \"password\": \"123456\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -921,11 +945,10 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/auth/login",
+              "raw": "{{url}}/api/auth/login",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "auth",
@@ -942,13 +965,13 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMjEwNzM1LCJleHAiOjE3NzEyMTQzMzV9.4PawoWg5e_dFyLIPhOyRTIdDBY4bjFYidA8HylW3yP8",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\" : \"updated name info\"\n}",
+              "raw": "{\n    \"name\" : \"updated name info\",\n    \"email\": \"user5@user.com\"\n   \n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -956,11 +979,10 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/auth/me",
+              "raw": "{{url}}/api/auth/me",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "auth",
@@ -980,7 +1002,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoibWFpbDFAZGFtaWwuY29tIiwiaWF0IjoxNzcxMjA1MzkxLCJleHAiOjE3NzEyMDg5OTF9.T4amD3RXhp546x_CAFqBvI57Xz9uAaPj8LQHqYA3aog",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
@@ -994,11 +1016,10 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/auth/me",
+              "raw": "{{url}}/api/auth/me",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "auth",
@@ -1015,7 +1036,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"mail1@damil.com\",\n    \"password\": \"1342werg\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1023,11 +1044,10 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/auth/logout",
+              "raw": "{{url}}/api/auth/logout",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "auth",
@@ -1179,7 +1199,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjMsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJ1c2VyNUB1c2VyLmNvbSIsImlhdCI6MTc3MTMzOTc5OSwiZXhwIjoxNzcxMzQzMzk5fQ.yWzyFSSGqFiHgNo9aR_OSLGFnyFx3aq--lKEYB5BZNs",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzE0MDUyODUsImV4cCI6MTc3MTQwODg4NX0.5fgQkMGuOLN6wxpFoE018kpAGX1FimYZ9dzRa9ufd2Q",
                 "type": "text"
               }
             ],
@@ -1214,7 +1234,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjMsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJ1c2VyNUB1c2VyLmNvbSIsImlhdCI6MTc3MTMzOTc5OSwiZXhwIjoxNzcxMzQzMzk5fQ.yWzyFSSGqFiHgNo9aR_OSLGFnyFx3aq--lKEYB5BZNs",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzE0MDUyODUsImV4cCI6MTc3MTQwODg4NX0.5fgQkMGuOLN6wxpFoE018kpAGX1FimYZ9dzRa9ufd2Q",
                 "type": "text"
               }
             ],
@@ -1228,7 +1248,7 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/user/loan/2",
+              "raw": "localhost:4000/api/user/loan/3",
               "host": [
                 "localhost"
               ],
@@ -1237,7 +1257,7 @@
                 "api",
                 "user",
                 "loan",
-                "2"
+                "3"
               ]
             }
           },
@@ -1253,7 +1273,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjMsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJ1c2VyNUB1c2VyLmNvbSIsImlhdCI6MTc3MTM0MDU3NiwiZXhwIjoxNzcxMzQ0MTc2fQ.XcikBrEYli5A8RFc9LsfpLVXssGLDS042HxkC8MOX7E",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzE2NzExODcsImV4cCI6MTc3MTY3NDc4N30.6T2Vn_HFvoIJid1KntjXCO0VYn-IWd3v5SRmQhNvva4",
                 "type": "text"
               }
             ],

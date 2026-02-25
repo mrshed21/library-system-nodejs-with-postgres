@@ -24,15 +24,15 @@ router.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
-router.use('/api', defaultLimiter);
-router.use('/api', booksRouter);
-router.use('/api', authorsRouter);
-router.use('/api', genresRouter);
-router.use('/api', usersRouter);
-router.use('/api', loanRouter);
+router.use('/', defaultLimiter);
+router.use('/', booksRouter);
+router.use('/', authorsRouter);
+router.use('/', genresRouter);
+router.use('/', usersRouter);
+router.use('/', loanRouter);
 
-router.use('/api/admin',authMiddleware, adminonly, adminRouter);
-router.use('/api', authRouter);
+router.use('//admin',authMiddleware, adminonly, adminRouter);
+router.use('/', authRouter);
 
 
 
