@@ -165,6 +165,11 @@ const showUserLoans = async (id)=> {
             user_id: id,
         }
     })
+    if (loans.length === 0  || loans === null) {
+        const error = new Error("Loans not found");
+        error.status = 404;
+        throw error;
+    }
     return loans;
 }
 

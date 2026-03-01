@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "a5105672-80d8-4c8f-af6a-89451b3b8641",
+    "_postman_id": "9d8b2d1b-d0e2-4dec-a560-c01b694e3c17",
     "name": "biblioteket",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "50186161",
-    "_collection_link": "https://go.postman.co/collection/50186161-a5105672-80d8-4c8f-af6a-89451b3b8641?source=collection_link"
+    "_exporter_id": "44656343",
+    "_collection_link": "https://go.postman.co/collection/44656343-9d8b2d1b-d0e2-4dec-a560-c01b694e3c17?source=collection_link"
   },
   "item": [
     {
@@ -208,7 +208,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{url}}/api/admin/books/260",
+                  "raw": "{{url}}/api/admin/books/27",
                   "host": [
                     "{{url}}"
                   ],
@@ -216,7 +216,7 @@
                     "api",
                     "admin",
                     "books",
-                    "260"
+                    "27"
                   ]
                 }
               },
@@ -235,7 +235,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"bookData\" : {\r\n                    \"name\" : \"updated book with service controll\"  ,\r\n                    \"genre_ids\" :[3,4]\r\n                }\r\n}",
+                  "raw": "{\r\n    \"name\": \"new update \"\r\n    \r\n    }",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -299,7 +299,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/api/books?page=3",
+              "raw": "{{url}}/api/books?limit=5",
               "host": [
                 "{{url}}"
               ],
@@ -310,12 +310,11 @@
               "query": [
                 {
                   "key": "limit",
-                  "value": "5",
-                  "disabled": true
+                  "value": "5"
                 },
                 {
                   "key": "authorId",
-                  "value": "213213",
+                  "value": "22",
                   "disabled": true
                 },
                 {
@@ -326,7 +325,8 @@
                 },
                 {
                   "key": "page",
-                  "value": "3"
+                  "value": "3",
+                  "disabled": true
                 }
               ]
             }
@@ -370,7 +370,7 @@
               "raw": "{\r\n    \"genre_ids\" :[1,2]\r\n}"
             },
             "url": {
-              "raw": "{{url}}/api/authors?page=1&name=lsöadkjflöasdjkf",
+              "raw": "{{url}}/api/authors?page=1",
               "host": [
                 "{{url}}"
               ],
@@ -385,7 +385,8 @@
                 },
                 {
                   "key": "name",
-                  "value": "lsöadkjflöasdjkf"
+                  "value": "lsöadkjflöasdjkf",
+                  "disabled": true
                 }
               ]
             }
@@ -405,14 +406,14 @@
               "raw": "{\r\n    \"genre_ids\" :[1,2]\r\n}"
             },
             "url": {
-              "raw": "{{url}}/api/authors/1",
+              "raw": "{{url}}/api/authors/2",
               "host": [
                 "{{url}}"
               ],
               "path": [
                 "api",
                 "authors",
-                "1"
+                "2"
               ]
             }
           },
@@ -787,7 +788,7 @@
               }
             ],
             "url": {
-              "raw": "{{url}}/api/users?page=2",
+              "raw": "{{url}}/api/users",
               "host": [
                 "{{url}}"
               ],
@@ -804,7 +805,7 @@
                 {
                   "key": "page",
                   "value": "2",
-                  "type": "text"
+                  "disabled": true
                 }
               ]
             }
@@ -813,9 +814,6 @@
         },
         {
           "name": "get user by id",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
           "request": {
             "method": "GET",
             "header": [
@@ -825,19 +823,15 @@
                 "type": "text"
               }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n \"name\" : \"new user 3f\"   , \"email\": \"emai2l23@damil.com\", \"password\": \"1342werg\"\n}"
-            },
             "url": {
-              "raw": "{{url}}/api/users/11",
+              "raw": "{{url}}/api/users/24",
               "host": [
                 "{{url}}"
               ],
               "path": [
                 "api",
                 "users",
-                "11"
+                "24"
               ]
             }
           },
@@ -856,7 +850,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\" : \"updated user\"   ,\n    \"email\": \"user5@user.com\",\n    \"password\": \"afaa\"\n}",
+              "raw": "{\n    \"name\" : \"updated user\"   \n   \n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -864,14 +858,14 @@
               }
             },
             "url": {
-              "raw": "{{url}}/api/users/12",
+              "raw": "{{url}}/api/users/297",
               "host": [
                 "{{url}}"
               ],
               "path": [
                 "api",
                 "users",
-                "12"
+                "297"
               ]
             }
           },
@@ -1072,11 +1066,10 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/auth/refresh",
+              "raw": "{{url}}/api/auth/refresh",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "auth",
@@ -1088,12 +1081,26 @@
         },
         {
           "name": "create new user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = JSON.parse(responseBody)\r",
+                  "pm.environment.set(\"token\", jsonData.token)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"user4\",\n    \"email\": \"user5@user.com\",\n    \"password\": \"123456\" ,\n    \"role\": \"admin\"\n}",
+              "raw": "{\n    \"name\": \"user4\",\n    \"email\": \"user8@user.com\",\n    \"password\": \"123456\" ,\n    \"role\": \"admin\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1101,11 +1108,10 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/auth/register",
+              "raw": "{{url}}/api/auth/register",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "auth",
@@ -1133,7 +1139,7 @@
                 "header": [
                   {
                     "key": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzEzNDI5NTEsImV4cCI6MTc3MTM0NjU1MX0.SbI5EdIaUmch8tvf2crCatTDlY2AHK1oWoeBsUPh3bU",
+                    "value": "Bearer {{token}}",
                     "type": "text"
                   }
                 ],
@@ -1142,11 +1148,10 @@
                   "raw": "{\n    \"book_id\" : 2\n}"
                 },
                 "url": {
-                  "raw": "localhost:4000/api/admin/loans",
+                  "raw": "{{url}}/api/admin/loans",
                   "host": [
-                    "localhost"
+                    "{{url}}"
                   ],
-                  "port": "4000",
                   "path": [
                     "api",
                     "admin",
@@ -1166,7 +1171,7 @@
                 "header": [
                   {
                     "key": "Authorization",
-                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzEzNDAyOTIsImV4cCI6MTc3MTM0Mzg5Mn0.pkLuctGiYQrvLAJDjj2cD2TEuPHvl5PKkmJs4Pzoktc",
+                    "value": "Bearer {{token}}",
                     "type": "text"
                   }
                 ],
@@ -1175,16 +1180,15 @@
                   "raw": "{\n    \"book_id\" : 2\n}"
                 },
                 "url": {
-                  "raw": "localhost:4000/api/admin/loan/3",
+                  "raw": "{{url}}/api/admin/loan/12",
                   "host": [
-                    "localhost"
+                    "{{url}}"
                   ],
-                  "port": "4000",
                   "path": [
                     "api",
                     "admin",
                     "loan",
-                    "3"
+                    "12"
                   ]
                 }
               },
@@ -1199,7 +1203,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzE0MDUyODUsImV4cCI6MTc3MTQwODg4NX0.5fgQkMGuOLN6wxpFoE018kpAGX1FimYZ9dzRa9ufd2Q",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
@@ -1213,11 +1217,10 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/user/loan",
+              "raw": "{{url}}/api/user/loan",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "user",
@@ -1234,7 +1237,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzE0MDUyODUsImV4cCI6MTc3MTQwODg4NX0.5fgQkMGuOLN6wxpFoE018kpAGX1FimYZ9dzRa9ufd2Q",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
@@ -1248,11 +1251,10 @@
               }
             },
             "url": {
-              "raw": "localhost:4000/api/user/loan/3",
+              "raw": "{{url}}/api/user/loan/3",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "user",
@@ -1273,7 +1275,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoidXNlcjRAdXNlci5jb20iLCJpYXQiOjE3NzE2NzExODcsImV4cCI6MTc3MTY3NDc4N30.6T2Vn_HFvoIJid1KntjXCO0VYn-IWd3v5SRmQhNvva4",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
@@ -1282,11 +1284,10 @@
               "raw": "{\n    \"book_id\" : 2\n}"
             },
             "url": {
-              "raw": "localhost:4000/api/user/loans",
+              "raw": "{{url}}/api/user/loans",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "user",
@@ -1306,7 +1307,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjMsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJ1c2VyNUB1c2VyLmNvbSIsImlhdCI6MTc3MTM0MDU3NiwiZXhwIjoxNzcxMzQ0MTc2fQ.XcikBrEYli5A8RFc9LsfpLVXssGLDS042HxkC8MOX7E",
+                "value": "Bearer {{token}}",
                 "type": "text"
               }
             ],
@@ -1315,11 +1316,10 @@
               "raw": "{\n    \"book_id\" : 2\n}"
             },
             "url": {
-              "raw": "localhost:4000/api/user/loan/2",
+              "raw": "{{url}}/api/user/loan/2",
               "host": [
-                "localhost"
+                "{{url}}"
               ],
-              "port": "4000",
               "path": [
                 "api",
                 "user",
