@@ -71,9 +71,9 @@ const Navbar = () => {
 
           {user ? (
             <div className="inline-flex items-center gap-4">
-              <div className="font-bold bg-green-600 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer text-white text-xl">
+              <Link to="/profile" className="font-bold bg-green-600 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer text-white text-xl hover:opacity-80 transition-opacity" title="Go to Profile">
                 {user && user?.name[0].toUpperCase()}
-              </div>
+              </Link>
               <button
                 onClick={logout}
                 className="bg-red-500 px-3 py-1 rounded cursor-pointer text-white hover:bg-red-800 transition"
@@ -175,14 +175,14 @@ const Navbar = () => {
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
               {user ? (
                 <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-3 px-2">
-                    <div className="font-bold bg-green-600 rounded-full w-8 h-8 flex items-center justify-center text-white">
+                  <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-lg transition">
+                    <div  className="font-bold bg-green-600 rounded-full w-8 h-8 flex items-center justify-center text-white">
                       {user.name[0].toUpperCase()}
                     </div>
                     <span className="text-gray-800 dark:text-white">
                       {user.name}
                     </span>
-                  </div>
+                  </Link>
                   <button
                     onClick={() => {
                       logout();

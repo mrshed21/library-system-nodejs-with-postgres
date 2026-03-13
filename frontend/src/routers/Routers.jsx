@@ -6,6 +6,8 @@ import Login from "../pages/Login";
 import Register from "../pages/Regestir";
 
 import { useAuth } from "../context/AuthContext";
+import Profile from "../pages/ProfilePage";
+import PageNotFound from "../pages/PageNotFound";
 
 
 
@@ -20,7 +22,8 @@ function Routers() {
       <Route path="/books/:id" element={<BookDetails />} />
       <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
       <Route path="/register" element={user ? <Navigate to="/" /> : <Register />} />
-      <Route path="*" element={<Home />} />
+      <Route path="/profile" element={user ? <Profile /> : <Navigate to="/login" />} />
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 }

@@ -22,15 +22,15 @@
 
 ✅ Add user activation / deactivation logic
 
-❌ Add get users pagination & filtering
+✅ Add get users pagination & filtering
 
-❌ Add soft delete (optional)
+✅ Add soft delete (optional)
 
 📚 Books / Authors / Genres
 
-❌ Add pagination & sorting
+✅ Add pagination & sorting
 
-❌ Add search (by name, author, genre)
+✅ Add search (by name, author, genre)
 
 ✅ Validate foreign keys properly
 

@@ -1,4 +1,4 @@
-const { Loan, BookCopy, Users, Books } = require("../models/Index");
+const { Loan, BookCopy, Users, Books, Authors } = require("../models/Index");
 const {sequelize} = require("../config/sequelize.config");
 
 const LOAN_DURATION = 30; // 30 days
@@ -163,14 +163,17 @@ const showUserLoans = async (id)=> {
     const loans = await Loan.findAll({
         where: {
             user_id: id,
-        }
+        },
+        include: [{
+            model: BookCopy,
+            include: [{
+                model: Books,
+                include: [Authors]
+            }]
+        }],
+        order: [['borrowDate', 'DESC']]
     })
-    if (loans.length === 0  || loans === null) {
-        const error = new Error("Loans not found");
-        error.status = 404;
-        throw error;
-    }
-    return loans;
+    return loans || [];
 }
 
 const showUserLoanById = async (id,loan_id) => {

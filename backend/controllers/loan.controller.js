@@ -3,7 +3,8 @@ const loanService = require("../services/loan.service");
 exports.createLoan = async (req, res, next) => {
   try {
     const user_id = req.user.id;
-    const loan = await loanService.createLoan(user_id, req.body.book_id);
+    const book_id = req.body.bookId || req.body.book_id;
+    const loan = await loanService.createLoan(user_id, book_id);
     res.json({ success: true, message: "Loan created", data: loan });
   } catch (error) {
     next(error);

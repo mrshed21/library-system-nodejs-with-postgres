@@ -1,16 +1,52 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchBookById } from '../api/books';
+import { borrowBook } from '../api/loans';
+import { getFavorites, addFavorite, removeFavorite } from '../api/favorites';
 import NewBooks from '../components/homePage/NewBooks';
+import { useAuth } from "../context/AuthContext";
 
 const BookDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   //get book details using react query
   const { data: bookData, isLoading, isError } = useQuery({
     queryKey: ['book', id],
     queryFn: () => fetchBookById(id),
+  });
+
+  const borrowMutation = useMutation({
+    mutationFn: borrowBook,
+    onSuccess: () => {
+      alert("Book borrowed successfully!");
+      queryClient.invalidateQueries({ queryKey: ['book', id] }); // Refresh availability
+    },
+    onError: (err) => {
+      alert(err.response?.data?.message || "Failed to borrow book");
+    }
+  });
+
+  // fetch favorites logic
+  const { data: favoritesData } = useQuery({
+    queryKey: ['favorites'],
+    queryFn: getFavorites,
+    enabled: !!user,
+  });
+
+  const favoritesList = favoritesData?.data || [];
+  const isFavorite = favoritesList.some((fav) => fav.id === Number(id) || fav.id === id);
+
+  const toggleFavoriteMutation = useMutation({
+    mutationFn: () => isFavorite ? removeFavorite(id) : addFavorite(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['favorites'] });
+    },
+    onError: (err) => {
+       alert(err.response?.data?.message || err.message || "Failed to toggle favorite");
+    }
   });
 
   const book = bookData?.data;
@@ -29,6 +65,17 @@ const BookDetails = () => {
       </button>
     </div>
   );
+
+  // Handle potential naming inconsistency (availableQuantity vs available_quantity)
+  const availableQty = book?.availableQuantity ?? book?.available_quantity ?? 0;
+
+  const handleBorrow = () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    borrowMutation.mutate(book.id);
+  };
 
   return (
     <div className="min-h-screen bg-customBg transition-colors duration-300 pb-12">
@@ -56,7 +103,7 @@ const BookDetails = () => {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
                 />
                 <div className="absolute top-4 right-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold shadow-sm text-gray-800 dark:text-gray-200">
-                  {book.availableQuantity > 0 ? "Available" : "Out of Stock"}
+                  {availableQty > 0 ? "Available" : "Out of Stock"}
                 </div>
               </div>
             </div>
@@ -77,8 +124,18 @@ const BookDetails = () => {
                 </div>
                 
                 {/* Favorite Button (Visual Only) */}
-                <button className="p-3 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-red-50 dark:hover:bg-red-900/30 text-gray-400 hover:text-red-500 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button 
+                   onClick={() => {
+                     if (!user) { navigate('/login'); return; }
+                     toggleFavoriteMutation.mutate();
+                   }}
+                   disabled={toggleFavoriteMutation.isPending}
+                   className={`p-3 rounded-full transition-colors ${
+                     isFavorite ? 'bg-red-50 text-red-500 dark:bg-red-900/40' : 'bg-gray-100 dark:bg-slate-700 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30'
+                   }`}
+                   title={isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill={isFavorite ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </button>
@@ -113,11 +170,17 @@ const BookDetails = () => {
 
               {/* Action Buttons */}
               <div className="mt-auto flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-                <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button 
+                  onClick={handleBorrow}
+                  disabled={availableQty <= 0 || borrowMutation.isPending}
+                  className={`flex-1 font-bold py-3 px-6 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 flex justify-center items-center gap-2 ${
+                    availableQty > 0 ? "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/30" : "bg-gray-400 cursor-not-allowed text-gray-200"
+                  }`}
+                >
+                   {borrowMutation.isPending ? "Processing..." : availableQty > 0 ? "Borrow Book" : "Out of Stock"}
+                  {!borrowMutation.isPending && <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                  Borrow Book
+                  </svg>}
                 </button>
                 <button className="flex-1 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-800 dark:text-white font-semibold py-3 px-6 rounded-xl transition flex justify-center items-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

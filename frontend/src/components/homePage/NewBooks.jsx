@@ -91,9 +91,7 @@ export default function NewBooks({title= "New Arrivals", description= "Check out
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {data?.data?.map((book) => (
-          <>
-            <BookCardSmall book={book} />
-          </>
+          <BookCardSmall key={book.id} book={book} />
         ))}
       </div>
     </section>

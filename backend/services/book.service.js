@@ -1,4 +1,4 @@
-const { Books, Authors, Genres } = require("../models/Index");
+const { Books, Authors, Genres, BookCopy } = require("../models/Index");
 const { Op } = require("sequelize");
 
 // get all books
@@ -58,8 +58,18 @@ exports.getBooks = async (query) => {
     error.status = 404;
     throw error;
   }
+
+  const formattedData = await Promise.all(data.map(async (book) => {
+    const count = await BookCopy.count({
+        where: { book_id: book.id, conditionStatus: "AVAILABLE" }
+    });
+    const b = book.toJSON();
+    b.availableQuantity = count;
+    return b;
+  }));
+
   return {
-    data,
+    data: formattedData,
     meta: {
       total: total,
       page: page,
@@ -88,7 +98,18 @@ exports.getBookById = async (id) => {
     error.status = 404;
     throw error;
   }
-  return book;
+
+  const availableCopiesCount = await BookCopy.count({
+    where: {
+      book_id: book.id,
+      conditionStatus: "AVAILABLE"
+    }
+  });
+
+  const bookData = book.toJSON();
+  bookData.availableQuantity = availableCopiesCount;
+
+  return bookData;
 };
 
 // create book

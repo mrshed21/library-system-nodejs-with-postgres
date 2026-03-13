@@ -78,16 +78,9 @@ exports.getFavoriteBooks = async (id) => {
         }]
     });
     if (!favoriteBooks) {
-        const error = new Error('favorite books not found');
-        error.status = 404;
-        throw error;
+        return [];
     }
-    if (favoriteBooks.Favorites.length === 0) {
-        const error = new Error('no favorite books found');
-        error.status = 404;
-        throw error;
-    }
-    const favoriteBooksData = favoriteBooks.Favorites.map(book => book.toJSON());
+    const favoriteBooksData = favoriteBooks.Favorites ? favoriteBooks.Favorites.map(book => book.toJSON()) : [];
     return favoriteBooksData;
 };
 
