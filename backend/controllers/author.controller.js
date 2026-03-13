@@ -2,8 +2,9 @@ const authorService = require('../services/authors.service');
 
 // get all authors
 exports.getAuthors = async (req, res, next) => {
+    const { search } = req.query;
     try {
-        const authors = await authorService.getAuthors();
+        const authors = await authorService.getAuthors({ search });
         res.json({
             success: true,
             message: 'Authors fetched successfully',

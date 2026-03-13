@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+
+
+:root {
+  --bg-primary: #ffffff;
+  --text-primary: #1a1a1a;
+  --accent-color: #2563eb; 
+}
+
+.dark {
+  --bg-primary: #0f172a;
+  --text-primary: #f8fafc;
+  --accent-color: #3b82f6; 
+}
+@custom-variant dark (&:where(.dark, .dark *));

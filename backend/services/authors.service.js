@@ -1,8 +1,26 @@
 const { Authors } = require("../models/Index");
+const {Op} = require("sequelize");
 
 // get all authors
-exports.getAuthors = async () => {
-  const authors = await Authors.findAll();
+exports.getAuthors = async (query) => {
+  if (!query.search) {
+    const authors = await Authors.findAll();
+    return authors;
+  }
+  const { search: searchTerm } = query;
+  const authors = await Authors.findAll({
+    where: {
+      name: {
+        [Op.iLike]: `%${searchTerm}%`
+      }
+    }
+  });
+
+  if (authors.length === 0) {
+    const error = new Error("No authors found");
+    error.status = 404;
+    throw error;
+  }
   return authors;
 };
 
