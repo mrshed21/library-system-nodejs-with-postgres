@@ -6,7 +6,7 @@ function BookCard({ book }) {
         
         <img
           src={book.image || "https://placehold.co/600x400"}
-          alt={book.name}
+          alt={book.title}
           className=" object-cover rounded"
         />
       </div>
@@ -16,7 +16,7 @@ function BookCard({ book }) {
       >
         <div>
           <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
-            {book.name}
+            {book.title}
           </h3>
           <p className="text-gray-600 dark:text-gray-300 mb-3">
             by{" "}

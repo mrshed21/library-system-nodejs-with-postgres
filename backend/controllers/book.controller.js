@@ -37,10 +37,18 @@ exports.getBookById = async (req, res, next) => {
 // Create book
 exports.createBook = async (req, res, next) => {
   try {
-    const { name, price, author_id, genre_ids } = req.body;
+    const { title, description, price, isbn, publication_year, language, publisher, pages, cover_image_url, edition, genre_ids, author_id } = req.body;
 
     const book = await bookService.createBook({
-      name,
+      title,
+      description,
+      isbn,
+      publication_year,
+      language,
+      publisher,
+      pages,
+      cover_image_url,
+      edition,
       price,
       author_id,
       genre_ids,
@@ -60,10 +68,18 @@ exports.createBook = async (req, res, next) => {
 exports.updateBook = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, price, author_id, genre_ids } = req.body;
+    const { title, description, price, isbn, publication_year, language, publisher, pages, cover_image_url, edition, genre_ids, author_id } = req.body;
     const updatedBook = await bookService.updateBook(id, {
-      name,
+      title,
+      description,
       price,
+      isbn,
+      publication_year,
+      language,
+      publisher,
+      pages,
+      cover_image_url,
+      edition,
       author_id,
       genre_ids,
     });

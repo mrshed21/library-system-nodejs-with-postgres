@@ -7,13 +7,14 @@ const MAX_ACTIVE_LOANS = 3;
 
 
 
-const createLoan = async (user_id, book_id) => {
+const createLoan = async (user_id, book_copy_id) => {
+  console.log(user_id , book_copy_id , "from loan service")
   const t = await sequelize.transaction();
   try {
     const bookCopy = await BookCopy.findOne({
       where: {
-         book_id,
-         conditionStatus: "AVAILABLE",
+         book_id: book_copy_id,
+         status: "AVAILABLE",
       },
       transaction: t,
       lock: t.LOCK.UPDATE,
@@ -28,7 +29,7 @@ const createLoan = async (user_id, book_id) => {
     }
 
     // book copy is not available
-    if (bookCopy.conditionStatus !== "AVAILABLE") {
+    if (bookCopy.status !== "AVAILABLE") {
       const error = new Error("Book copy is not available");
       error.status = 400;
       throw error;
@@ -90,7 +91,7 @@ const createLoan = async (user_id, book_id) => {
 
     await bookCopy.update(
       {
-        conditionStatus: "BORROWED",
+        status: "BORROWED",
       },
       { transaction: t },
     );
@@ -137,6 +138,7 @@ const returnLoan = async (user_id,loan_id) => {
     );
 
     const fine = overdueDays * DAILY_FINE;
+    loan.fine = fine;
     loan.status = overdueDays > 0 ? "overdue" : "returned";
 
     await loan.save();
@@ -145,7 +147,7 @@ const returnLoan = async (user_id,loan_id) => {
 
     await bookCopy.update(
       {
-        conditionStatus: "AVAILABLE",
+        status: "AVAILABLE",
       },
       { transaction: t },
     );

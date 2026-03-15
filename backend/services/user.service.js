@@ -1,4 +1,4 @@
-const { Users ,Books ,FavoriteBooks } = require("../models/Index");
+const { Users ,Books ,FavoriteBooks, Authors } = require("../models/Index");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -74,8 +74,12 @@ exports.getFavoriteBooks = async (id) => {
         include: [{
             model: Books,
             as: 'Favorites',
-            through: { attributes: [] }
-        }]
+            through: { attributes: [] },
+            include: [{
+                model: Authors,
+                attributes: ['name']
+            }]
+        },]
     });
     if (!favoriteBooks) {
         return [];

@@ -1,7 +1,7 @@
 import api from "./axios";
 
-export const borrowBook = async (bookId) => {
-  const response = await api.post("/api/user/loan", { bookId });
+export const borrowBook = async (book_id) => {
+  const response = await api.post("/api/user/loan", { book_id });
   return response.data;
 };
 

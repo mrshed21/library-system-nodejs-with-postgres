@@ -47,9 +47,9 @@ const Profile = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {currentLoans.map((loan) => (
                   <div key={loan.id} className="flex bg-gray-50 dark:bg-slate-700/50 p-4 rounded-xl border border-gray-100 dark:border-slate-700 gap-4">
-                    <img src={loan.BookCopy?.Book?.image || "https://placehold.co/150x220?text=Book"} alt={loan.BookCopy?.Book?.name || "Book"} className="w-16 h-24 object-cover rounded shadow-sm" />
+                    <img src={loan.BookCopy?.Book?.image || "https://placehold.co/150x220?text=Book"} alt={loan.BookCopy?.Book?.title || "Book"} className="w-16 h-24 object-cover rounded shadow-sm" />
                     <div className="flex-1 flex flex-col justify-center">
-                      <h4 className="font-bold text-gray-900 dark:text-white">{loan.BookCopy?.Book?.name || "Unknown Book"}</h4>
+                      <h4 className="font-bold text-gray-900 dark:text-white">{loan.BookCopy?.Book?.title || "Unknown Book"}</h4>
                       <p className="text-sm text-gray-500 dark:text-gray-400">{loan.BookCopy?.Book?.Author?.name || "Unknown Author"}</p>
                       <p className="text-sm text-red-500 mt-2 font-medium">Due: {new Date(loan.dueDate).toLocaleDateString()}</p>
                     </div>
@@ -89,7 +89,7 @@ const Profile = () => {
               <tbody>
                 {historyLoans.map((loan) => (
                   <tr key={loan.id} className="border-b dark:border-slate-700">
-                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{loan.BookCopy?.Book?.name || 'Unknown Book'}</td>
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{loan.BookCopy?.Book?.title || 'Unknown Book'}</td>
                     <td className="px-6 py-4">{loan.BookCopy?.Book?.Author?.name || 'Unknown Author'}</td>
                     <td className="px-6 py-4">{new Date(loan.returnDate).toLocaleDateString()}</td>
                     <td className="px-6 py-4">
@@ -114,11 +114,11 @@ const Profile = () => {
                   <Link key={book.id} to={`/books/${book.id}`} className="block group">
                      <div className="bg-gray-50 dark:bg-slate-700/50 rounded-xl overflow-hidden border border-gray-100 dark:border-slate-700 hover:shadow-lg transition-transform transform group-hover:-translate-y-1">
                        <div className="aspect-[2/3] overflow-hidden">
-                         <img src={book.image || "https://placehold.co/150x220?text=Book"} alt={book.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                         <img src={book.image || "https://placehold.co/150x220?text=Book"} alt={book.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                        </div>
                        <div className="p-4">
-                         <h4 className="font-bold text-gray-900 dark:text-white truncate" title={book.name}>{book.name}</h4>
-                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">${book.price}</p>
+                         <h4 className="font-bold text-gray-900 dark:text-white truncate" title={book.title}>{book.title}</h4>
+                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{book.Author.name}</p>
                        </div>
                      </div>
                   </Link>

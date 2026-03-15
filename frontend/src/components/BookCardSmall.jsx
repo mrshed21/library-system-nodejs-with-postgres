@@ -12,7 +12,7 @@ export default function BookCardSmall({ book }) {
             <div className="h-64 overflow-hidden relative">
               <img
                 src={book.image || "https://placehold.co/400x600?text=No+Cover"}
-                alt={book.name}
+                alt={book.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
@@ -25,7 +25,7 @@ export default function BookCardSmall({ book }) {
             {/* Book Info */}
             <div className="p-4 flex flex-col flex-1">
               <h3 className="font-bold text-lg text-gray-900 dark:text-white line-clamp-1 mb-1" title={book.name}>
-                {book.name}
+                {book.title}
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                 by {book.Author?.name}

@@ -1,12 +1,13 @@
 const express = require('express');
 const { validateId } = require('../middleware/idParamValidation');
-const router = express.Router();
 const bookController = require('../controllers/book.controller');
 const bookCopyController = require('../controllers/bookCopy.controller');
 
 const validate = require('../middleware/validate');
 const { createBookSchema, updateBookSchema } = require('../schemas/book.schema');
 const { createBookCopySchema, updateBookCopySchema } = require('../schemas/bookCopy.schema');
+
+const router = express.Router();
 
 // create book
 router.post('/books', validate(createBookSchema), bookController.createBook)

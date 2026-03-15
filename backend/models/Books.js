@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const {sequelize} = require("../config/sequelize.config");
+const { sequelize } = require("../config/sequelize.config");
 
 const Books = sequelize.define(
   "Books",
@@ -9,16 +9,17 @@ const Books = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
-      require: true,
-      
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
     price: {
       type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-      require: true,
+      allowNull:true,
     },
     author_id: {
       type: DataTypes.INTEGER,
@@ -28,6 +29,37 @@ const Books = sequelize.define(
         key: "id",
       },
     },
+    isbn: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    publication_year: {
+      type: DataTypes.SMALLINT,
+      allowNull: false,
+    },
+    language: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+    publisher: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    pages: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+      cover_image_url: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      edition: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+
+
   },
   {
     tableName: "Books",
@@ -35,6 +67,5 @@ const Books = sequelize.define(
     paranoid: true,
   },
 );
-
 
 module.exports = Books;

@@ -22,7 +22,7 @@ exports.getBooks = async (query) => {
   }
 
   if (search) {
-    whereClause.name = {
+    whereClause.title = {
       [Op.iLike]: `%${search}%`,
     };
   }
@@ -61,7 +61,7 @@ exports.getBooks = async (query) => {
 
   const formattedData = await Promise.all(data.map(async (book) => {
     const count = await BookCopy.count({
-        where: { book_id: book.id, conditionStatus: "AVAILABLE" }
+        where: { book_id: book.id, status: "AVAILABLE" }
     });
     const b = book.toJSON();
     b.availableQuantity = count;
@@ -102,7 +102,7 @@ exports.getBookById = async (id) => {
   const availableCopiesCount = await BookCopy.count({
     where: {
       book_id: book.id,
-      conditionStatus: "AVAILABLE"
+      status: "AVAILABLE"
     }
   });
 
@@ -114,11 +114,11 @@ exports.getBookById = async (id) => {
 
 // create book
 exports.createBook = async (bookData) => {
-  const { name, price, author_id, genre_ids } = bookData;
+  const { title, description, price, isbn, publication_year, language, publisher, pages, cover_image_url, edition, genre_ids, author_id } = bookData;
 
   const existingBook = await Books.findOne({
     where: {
-      name: name,
+      title: title,
     },
   });
   if (existingBook) {
@@ -133,7 +133,7 @@ exports.createBook = async (bookData) => {
     error.status = 404;
     throw error;
   }
-  const book = await Books.create({ name, price, author_id });
+  const book = await Books.create({ title, description, price, isbn, publication_year, language, publisher, pages, cover_image_url, edition, author_id });
   if (genre_ids && genre_ids.length > 0) {
     await book.setGenres(genre_ids);
   }
@@ -142,14 +142,14 @@ exports.createBook = async (bookData) => {
 
 // update book
 exports.updateBook = async (id, bookData) => {
-  const { name, price, author_id, genre_ids } = bookData;
+  const { title, description, price, isbn, publication_year, language, publisher, pages, cover_image_url, edition, genre_ids, author_id } = bookData;
   const book = await Books.findByPk(id);
   if (!book) {
     const error = new Error("Book not found");
     error.status = 404;
     throw error;
   }
-  await book.update({ name, price, author_id });
+  await book.update({ title, description, price, isbn, publication_year, language, publisher, pages, cover_image_url, edition, author_id });
 
   if (Array.isArray(genre_ids) && genre_ids.length > 0) {
     await book.setGenres(genre_ids);

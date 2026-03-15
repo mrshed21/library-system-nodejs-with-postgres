@@ -99,7 +99,7 @@ const BookDetails = () => {
               <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl shadow-lg group">
                 <img 
                   src={book.image || "https://placehold.co/600x900?text=Book+Cover"} 
-                  alt={book.name} 
+                  alt={book.title} 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
                 />
                 <div className="absolute top-4 right-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold shadow-sm text-gray-800 dark:text-gray-200">
@@ -113,7 +113,7 @@ const BookDetails = () => {
               <div className="flex justify-between items-start">
                 <div>
                   <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">
-                    {book.name}
+                    {book.title}
                   </h1>
                   <div className="flex items-center gap-2 mb-4">
                     <span className="text-lg text-gray-600 dark:text-gray-400">by</span>
@@ -199,19 +199,19 @@ const BookDetails = () => {
           {/* Static placeholders for demo purposes */}
           <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 text-center">
             <p className="text-gray-500 text-sm mb-1">Published</p>
-            <p className="font-semibold text-gray-900 dark:text-white">2023</p>
+            <p className="font-semibold text-gray-900 dark:text-white">{book.publication_year}</p>
           </div>
           <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 text-center">
             <p className="text-gray-500 text-sm mb-1">Pages</p>
-            <p className="font-semibold text-gray-900 dark:text-white">320</p>
+            <p className="font-semibold text-gray-900 dark:text-white">{book.pages}</p>
           </div>
           <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 text-center">
             <p className="text-gray-500 text-sm mb-1">Language</p>
-            <p className="font-semibold text-gray-900 dark:text-white">English</p>
+            <p className="font-semibold text-gray-900 dark:text-white">{book.language}</p>
           </div>
           <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 text-center">
             <p className="text-gray-500 text-sm mb-1">ISBN</p>
-            <p className="font-semibold text-gray-900 dark:text-white">978-3-16-148410-0</p>
+            <p className="font-semibold text-gray-900 dark:text-white">{book.isbn}</p>
           </div>
         </div>
       </div>

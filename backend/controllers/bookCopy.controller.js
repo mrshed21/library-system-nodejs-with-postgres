@@ -23,7 +23,7 @@ exports.getAllBookCopiesWithBook = async (req, res, next) => {
 }
 
 // get bookCopy by id
-exports.getBookCopyById = async (req, res   , next) => {
+exports.getBookCopyById = async (req, res, next) => {
     try {
         const bookCopy = await bookCopyService.getBookCopyById(req.params.id);
         res.json({
@@ -40,9 +40,14 @@ exports.getBookCopyById = async (req, res   , next) => {
 // create bookCopy
 exports.createBookCopy = async (req, res, next) => {
     try {
-    const { book_id, conditionStatus, shelfLocation } = req.body;
+    const { book_id, status, shelfLocation, notes } = req.body;
+    if (!book_id) {
+        const error = new Error('Book ID is required');
+        error.status = 400;
+        throw error;
+    }
     
-    const bookCopy = await bookCopyService.createBookCopy({ book_id, conditionStatus, shelfLocation });
+    const bookCopy = await bookCopyService.createBookCopy({ book_id, status, shelfLocation, notes });
     
     res.json({ success: true, message: 'BookCopy created', data: bookCopy }); 
     } catch (error) {
@@ -55,8 +60,8 @@ exports.createBookCopy = async (req, res, next) => {
 exports.updateBookCopy = async (req , res, next) => {
     try {
         const { id } = req.params;
-        const { book_id, conditionStatus, shelfLocation } = req.body;
-        const updatedBookCopy = await bookCopyService.updateBookCopy(id, { book_id, conditionStatus, shelfLocation });
+        const { book_id, status, shelfLocation, notes } = req.body;
+        const updatedBookCopy = await bookCopyService.updateBookCopy(id, { book_id, status, shelfLocation, notes });
         res.json({ success: true, message: 'BookCopy updated', data: updatedBookCopy     });
     } catch (error) {
         next(error)

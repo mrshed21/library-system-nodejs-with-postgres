@@ -10,7 +10,7 @@ const Books = () => {
   const [search, setSearch] = useState("");
   const [genre, setGenre] = useState("");
   const [authorId, setAuthorId] = useState("");
-  const [sortOrder, setSortOrder] = useState("name-ASC");
+  const [sortOrder, setSortOrder] = useState("title-ASC");
 
   // Debounce Search Input
   const [searchInput, setSearchInput] = useState("");
