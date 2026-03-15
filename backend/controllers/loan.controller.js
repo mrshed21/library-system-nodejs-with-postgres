@@ -75,3 +75,30 @@ exports.showLoanById = async (req, res, next) => {
     next(error);
   }
 };
+
+// admin create loan for any user
+exports.adminCreateLoan = async (req, res, next) => {
+  try {
+    const { user_id, book_id } = req.body;
+    if (!user_id || !book_id) {
+      const error = new Error('user_id and book_id are required');
+      error.status = 400;
+      throw error;
+    }
+    const loan = await loanService.createLoan(user_id, book_id);
+    res.json({ success: true, message: 'Loan created by admin', data: loan });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// admin return any loan (no user_id restriction)
+exports.adminReturnLoan = async (req, res, next) => {
+  try {
+    const loan_id = req.params.id;
+    const loan = await loanService.adminReturnLoan(loan_id);
+    res.json({ success: true, message: 'Loan returned by admin', data: loan });
+  } catch (error) {
+    next(error);
+  }
+};

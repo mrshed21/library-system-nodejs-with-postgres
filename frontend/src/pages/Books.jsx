@@ -1,7 +1,7 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { fetchBooks } from "../api/books";
-import { fetchGenres } from "../api/genres";
-import { fetchAuthors } from "../api/authors";
+import { getAllBooks } from "../api/books";
+import { getAllGenres } from "../api/genres";
+import { getAllAuthors } from "../api/authors";
 import { useState, useEffect } from "react";
 import BookCard from "../components/BookCard";
 
@@ -31,19 +31,19 @@ const Books = () => {
 
   const { data, isLoading, isError, error, isPlaceholderData } = useQuery({
     queryKey: ["books", page, search, genre, sort, order, authorId],
-    queryFn: () => fetchBooks({ page, search, genre, sort, order, authorId }),
+    queryFn: () => getAllBooks({ page, search, genre, sort, order, authorId }),
     placeholderData: keepPreviousData,
     retry: false,
   });
 
   const { data: genresData } = useQuery({
     queryKey: ["genres"],
-    queryFn: fetchGenres,
+    queryFn: getAllGenres,
   });
 
   const { data: authorsData } = useQuery({
     queryKey: ["authors"],
-    queryFn: fetchAuthors,
+    queryFn: getAllAuthors,
   });
 
   return (

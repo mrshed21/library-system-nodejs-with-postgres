@@ -5,7 +5,7 @@ function BookCard({ book }) {
       <div className="flex-1">
         
         <img
-          src={book.image || "https://placehold.co/600x400"}
+          src={book.image || "https://placehold.co/600x400?text=No+Cover"}
           alt={book.title}
           className=" object-cover rounded"
         />

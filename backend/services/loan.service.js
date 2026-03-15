@@ -196,7 +196,21 @@ const showUserLoanById = async (id,loan_id) => {
 
 // admin routes
 const showAllLoans = async () => {
-    const loans = await Loan.findAll();
+    const loans = await Loan.findAll({
+        include: [
+            {
+                model: Users,
+                attributes: ['id', 'name', 'email']
+            },
+            {
+                model: BookCopy,
+                include: [{
+                    model: Books,
+                    attributes: ['id', 'title']
+                }]
+            }
+        ]
+    });
     return loans;
 }
 
@@ -212,9 +226,45 @@ const showLoanById = async (id)=> {
 
 
 
+const adminReturnLoan = async (loan_id) => {
+  const t = await sequelize.transaction();
+  try {
+    const loan = await Loan.findByPk(loan_id, { transaction: t });
+    if (!loan) {
+      const error = new Error('Loan not found');
+      error.status = 404;
+      throw error;
+    }
+    if (loan.status === 'returned') {
+      const error = new Error('Loan already returned');
+      error.status = 400;
+      throw error;
+    }
+
+    const now = new Date();
+    loan.returnDate = now;
+    const overdueDays = Math.max(0, Math.ceil((now - loan.dueDate) / (1000 * 60 * 60 * 24)));
+    loan.fine = overdueDays * DAILY_FINE;
+    loan.status = overdueDays > 0 ? 'overdue' : 'returned';
+    await loan.save({ transaction: t });
+
+    const bookCopy = await BookCopy.findByPk(loan.book_copy_id, { transaction: t });
+    if (bookCopy) {
+      await bookCopy.update({ status: 'AVAILABLE' }, { transaction: t });
+    }
+
+    await t.commit();
+    return loan;
+  } catch (error) {
+    await t.rollback();
+    throw error;
+  }
+};
+
 module.exports = {
   createLoan,
   returnLoan,
+  adminReturnLoan,
   showAllLoans,
   showUserLoans,
   showLoanById,

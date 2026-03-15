@@ -1,9 +1,9 @@
-import MainLayout from './layouts/MainLayout';
+import Routers from "./routers/Routers";
 
 
 function App() {
    return (
-    <MainLayout />
+    <Routers />
   );
 }
 

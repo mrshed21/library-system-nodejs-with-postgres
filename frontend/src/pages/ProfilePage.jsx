@@ -4,10 +4,12 @@ import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchMyLoans, returnBook } from "../api/loans";
 import { getFavorites } from "../api/favorites";
+import { updateUser } from "../api/users";
 
 const Profile = () => {
   const { user } = useAuth(); // Assuming useAuth provides user object
   const [activeTab, setActiveTab] = useState("current"); // current, history, favorites, settings
+  const [updateUserInput, setUpdateUserInput] = useState(null);
   const queryClient = useQueryClient();
 
   const returnMutation = useMutation({
@@ -30,6 +32,29 @@ const Profile = () => {
     queryFn: getFavorites,
     enabled: !!user,
   });
+
+  const updateUserMutation = useMutation({
+    mutationFn: ({ id, data }) => updateUser(id, data),
+    onSuccess: (updatedUser) => {
+      queryClient.setQueryData(["user"], updatedUser);
+      alert("Profile updated successfully");
+    },
+    onError: (err) => {
+      alert(err.response?.data?.message || err.message || "Failed to update profile");
+    }
+  });
+  const handleUpdateUser = (e) => {
+    e.preventDefault();
+    if (!updateUserInput?.name) {
+      alert("Name cannot be empty");
+      return;
+    }
+    
+    updateUserMutation.mutate({ id: user.id, data: { ...updateUserInput } });
+  };
+
+
+  
 
   const loans = loansData?.data || [];
   const currentLoans = loans.filter(loan => !loan.returnDate);
@@ -137,14 +162,14 @@ const Profile = () => {
         return (
           <div className="max-w-lg">
              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Account Settings</h3>
-             <form className="space-y-4">
+             <form onSubmit={handleUpdateUser} className="space-y-4">
                <div>
                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
-                 <input type="text" defaultValue={user?.name} className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 sm:text-sm" />
+                 <input type="text" defaultValue={user?.name} onChange={(e) => setUpdateUserInput({...updateUserInput, name: e.target.value})} className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 sm:text-sm" />
                </div>
                <div>
                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                 <input type="email" defaultValue={user?.email} disabled className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-gray-400 shadow-sm cursor-not-allowed py-2 px-3 sm:text-sm opacity-70" />
+                 <input type="email" defaultValue={user?.email} onChange={(e) => setUpdateUserInput({...updateUserInput, email: e.target.value})} disabled className="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-gray-400 shadow-sm cursor-not-allowed py-2 px-3 sm:text-sm opacity-70" />
                </div>
                <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Update Profile</button>
              </form>

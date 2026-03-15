@@ -6,7 +6,7 @@ exports.getAllBookCopiesWithBook  = async (limit , offset) => {
         include: [
             {
                 model: Books,
-                attributes: [],
+                attributes: ['id', 'title'],
             },
         ],
         limit,
@@ -21,8 +21,7 @@ exports.getBookCopyById = async (id) => {
         include: [
             {
                 model: Books,
-                attributes: [],
-
+                attributes: ['id', 'title'],
             }, 
         ],
     })

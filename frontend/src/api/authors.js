@@ -1,10 +1,8 @@
 import api from "./axios";
 
-export const fetchAuthors = async ({search}) => {
+export const getAllAuthors = async ({search} = {}) => {
   const response = await api.get("/api/authors", {
-    params: {
-      search,
-    },
+    params: { search },
   });
   return response.data;
 }

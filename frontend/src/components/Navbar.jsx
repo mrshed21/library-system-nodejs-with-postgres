@@ -68,6 +68,18 @@ const Navbar = () => {
           >
             Books
           </NavLink>
+          {user?.role === 'admin' && (
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                isActive
+                  ? "bg-blue-600 text-white px-3 py-2 rounded-lg shadow-md transition-all"
+                  : "text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-2 rounded-lg transition-all"
+              }
+            >
+              Dashboard
+            </NavLink>
+          )}
 
           {user ? (
             <div className="inline-flex items-center gap-4">
@@ -171,6 +183,19 @@ const Navbar = () => {
             >
               Books
             </NavLink>
+            {user?.role === 'admin' && (
+              <NavLink
+                to="/dashboard"
+                onClick={() => setIsOpen(false)}
+                className={({ isActive }) =>
+                  isActive
+                    ? "bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md block"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 rounded-lg block transition"
+                }
+              >
+                Dashboard
+              </NavLink>
+            )}
 
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
               {user ? (

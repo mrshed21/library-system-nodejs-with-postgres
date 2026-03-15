@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { fetchBooks } from "../../api/books";
+import { getAllBooks } from "../../api/books";
 import BookCardSmall from "../BookCardSmall";
 
 export default function NewBooks({title= "New Arrivals", description= "Check out the latest additions to our collection" , numberOfBooks = 10}) {
@@ -9,7 +9,7 @@ export default function NewBooks({title= "New Arrivals", description= "Check out
 
   const { data, isLoading } = useQuery({
     queryKey: ["newBooks"],
-    queryFn: () => fetchBooks({ sort: "createdAt", order: "DESC", limit: numberOfBooks }),
+    queryFn: () => getAllBooks({ sort: "createdAt", order: "DESC", limit: numberOfBooks }),
   });
 
   // Function to handle scrolling left or right
@@ -93,6 +93,16 @@ export default function NewBooks({title= "New Arrivals", description= "Check out
         {data?.data?.map((book) => (
           <BookCardSmall key={book.id} book={book} />
         ))}
+      </div>
+
+      {/* View All Button */}
+      <div className="mt-10 text-center">
+        <Link 
+          to="/books" 
+          className="inline-block px-8 py-3 font-semibold text-blue-600 bg-blue-50 dark:bg-slate-800 dark:text-blue-400 rounded-full hover:bg-blue-100 dark:hover:bg-slate-700 transition-colors duration-300 shadow-sm hover:shadow"
+        >
+          View All Books
+        </Link>
       </div>
     </section>
   );

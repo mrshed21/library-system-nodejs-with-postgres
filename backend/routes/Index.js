@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-
 const authorsRouter = require('../routes/authors.routes');
 const booksRouter = require('../routes/books.routes');
 const genresRouter = require('../routes/genres.routes');
@@ -9,20 +8,11 @@ const usersRouter = require('../routes/users.routes');
 const authRouter = require('../routes/auth.routes');
 const adminRouter = require('../routes/admin.routes');
 const loanRouter = require('../routes/loanRoute.routes');
-
+const bookCopiesRouter = require('./bookCopies.routes.js');
 
 const { defaultLimiter } = require('../middleware/limiter');
 const { authMiddleware,adminonly } = require('../middleware/auth');
 const errorHandler = require('../middleware/errorHandler');        
-
-
-const path = require('path');
-
-
-
-router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
-});
 
 router.use('/', defaultLimiter);
 router.use('/', booksRouter);
@@ -30,6 +20,7 @@ router.use('/', authorsRouter);
 router.use('/', genresRouter);
 router.use('/', usersRouter);
 router.use('/', loanRouter);
+router.use('/', bookCopiesRouter);
 
 router.use('/admin',authMiddleware, adminonly, adminRouter);
 router.use('/', authRouter);

@@ -14,7 +14,7 @@ exports.createBookSchema = z.object({
   publication_year: z.number({
     required_error: "Publication year is required",
   }).int("Publication year must be an integer").positive("Publication year must be positive"),
-language: z.string({
+  language: z.string({
     required_error: "Language is required",
   }).min(1, "Language cannot be empty"),
   publisher: z.string({

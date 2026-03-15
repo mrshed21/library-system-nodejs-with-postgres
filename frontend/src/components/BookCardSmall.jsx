@@ -6,7 +6,7 @@ export default function BookCardSmall({ book }) {
   return (
     <div
             key={book.id}
-            className="min-w-[250px] md:min-w-[280px] snap-start bg-white dark:bg-slate-800 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 group"
+            className="min-w-[250px] md:min-w-[280px] snap-start bg-white dark:bg-slate-800 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group"
           >
             {/* Book Cover */}
             <div className="h-64 overflow-hidden relative">
