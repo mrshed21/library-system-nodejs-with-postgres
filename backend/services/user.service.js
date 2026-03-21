@@ -17,10 +17,34 @@ exports.getUsers = async () => {
 
 };
 
-// get user by id
+// get user by id with loans and favorite books
 exports.getUserById = async (id) => {
     const user = await Users.findByPk(id , {
-        attributes: [ "id", "name", "email", "role", "isActive"]
+        attributes: [ "id", "name", "email", "role", "isActive"],
+        include: [
+            {
+                model: require("../models/Index").Loan,
+                as: "Loans",
+                include: [
+                    {
+                        model: require("../models/Index").BookCopy,
+                        as: "BookCopy",
+                        include: [
+                            {
+                                model: require("../models/Index").Books,
+                                as: "Book",
+                                include: [
+                                    {
+                                        model: require("../models/Index").Authors,
+                                        as: "Author"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     });
     if (!user) {
         const error = new Error('user not found');

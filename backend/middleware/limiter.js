@@ -15,7 +15,7 @@ exports.refreshLimiter = limiter({
     max : 10 , 
     keyGenerator: (req) => {
         if (req.user && req.user.id) return req.user.id;
-        return req.ip; // fallback
+        return limiter.ipKeyGenerator(req); // Use ipKeyGenerator for IPv6 support
     },
     handler: (req, res, next) => {
     const error = new Error("Too many refresh requests");

@@ -1,5 +1,4 @@
 const express = require('express');
-const app = express();
 require('dotenv').config();
 const cors = require('cors');
 const { connectDB } = require('./config/sequelize.config');
@@ -7,6 +6,7 @@ const helmet = require('helmet');
 const apiRoutes = require('./routes/Index');
 
 
+const app = express();
 const PORT = process.env.PORT || 3000;
 
 

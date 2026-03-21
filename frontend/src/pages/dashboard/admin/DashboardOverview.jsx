@@ -4,6 +4,7 @@ import { getAllBooks } from "../../../api/books";
 import { getAllUsers } from "../../../api/users";
 import { getAllBookCopies } from "../../../api/bookCopies";
 import { getAllLoans } from "../../../api/loans";
+import { getAllAuthors } from "../../../api/authors";
 
 const DashboardOverview = () => {
   const [stats, setStats] = useState({
@@ -11,17 +12,19 @@ const DashboardOverview = () => {
     users: 0,
     loans: 0,
     copies: 0,
+    authors: 0,
   });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [booksData, usersData, copiesData, loansData] = await Promise.all([
-          getAllBooks(),
+        const [booksData, usersData, copiesData, loansData, authorsData] = await Promise.all([
+          getAllBooks({ limit: 10000 }), // Fetch all books for accurate count
           getAllUsers({}),
-          getAllBookCopies(),
+          getAllBookCopies({ limit: 10000 }), // Fetch all book copies for accurate count
           getAllLoans().catch(() => ({ data: [] })),
+          getAllAuthors().catch(() => ({ data: [] })),
         ]);
 
         const allLoans = loansData?.data ?? [];
@@ -32,6 +35,7 @@ const DashboardOverview = () => {
           users: usersData?.data?.users?.length ?? usersData?.data?.length ?? 0,
           copies: copiesData?.data?.length ?? 0,
           loans: activeLoans.length,
+          authors: authorsData?.data?.length ?? 0,
         });
       } catch (error) {
         console.error("Error fetching dashboard stats:", error);
@@ -88,6 +92,17 @@ const DashboardOverview = () => {
       link: "/dashboard/users",
       color: "bg-orange-100 dark:bg-orange-900/30",
     },
+    {
+      title: "Total Authors",
+      value: stats.authors,
+      icon: (
+        <svg className="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      ),
+      link: "/dashboard/authors",
+      color: "bg-purple-100 dark:bg-purple-900/30",
+    },
   ];
 
   if (loading) {
@@ -107,7 +122,7 @@ const DashboardOverview = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {statCards.map((card, index) => (
           <div 
             key={index} 
@@ -156,10 +171,10 @@ const DashboardOverview = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                </svg>
              </Link>
-             <Link to="/dashboard/users" className="flex items-center justify-between p-3 rounded-lg border border-gray-100 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
-               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Manage Users</span>
+             <Link to="/dashboard/authors" className="flex items-center justify-between p-3 rounded-lg border border-gray-100 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Manage Authors</span>
                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                </svg>
              </Link>
            </div>

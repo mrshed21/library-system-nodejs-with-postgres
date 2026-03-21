@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "9d8b2d1b-d0e2-4dec-a560-c01b694e3c17",
-    "name": "biblioteket",
+    "name": "Se library",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "44656343",
     "_collection_link": "https://go.postman.co/collection/44656343-9d8b2d1b-d0e2-4dec-a560-c01b694e3c17?source=collection_link"
@@ -61,7 +61,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n  \"book_id\": 4 , \r\n  \"conditionStatus\" : \"AVAILABLE\" , \r\n  \"shelfLocation\" : \"LOC001\"\r\n}",
+                      "raw": "{\r\n  \"book_id\": 3 , \r\n  \"status\" : \"AVAILABLE\" , \r\n  \"shelfLocation\" : \"LOC003\"\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -270,7 +270,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"name\": \"new test with new filter\",\r\n    \"author_id\": 4,\r\n    \"price\": 22,\r\n     \"genre_ids\": [2,10]\r\n    }",
+                  "raw": "{\r\n    \"title\": \"test4\",\r\n    \"description\": \"sdfjsd\",\r\n    \"price\": 22,\r\n    \"isbn\": \"aasdfasss\",\r\n    \"publication_year\": 1990,\r\n    \"language\": \"english\",\r\n    \"publisher\": \"sdfdsf\",\r\n    \"pages\": 300,\r\n    \"cover_image_url\": \"södlfölsdfsdf\",\r\n    \"edition\": \"öalksdjf\",\r\n    \"author_id\": 1,\r\n    \"genre_ids\": [\r\n        1\r\n    ]\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -299,7 +299,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/api/books?limit=5",
+              "raw": "{{url}}/api/books",
               "host": [
                 "{{url}}"
               ],
@@ -310,7 +310,8 @@
               "query": [
                 {
                   "key": "limit",
-                  "value": "5"
+                  "value": "5",
+                  "disabled": true
                 },
                 {
                   "key": "authorId",
@@ -325,7 +326,17 @@
                 },
                 {
                   "key": "page",
-                  "value": "3",
+                  "value": "5",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "updated",
+                  "disabled": true
+                },
+                {
+                  "key": "genre",
+                  "value": "drama",
                   "disabled": true
                 }
               ]
@@ -370,7 +381,7 @@
               "raw": "{\r\n    \"genre_ids\" :[1,2]\r\n}"
             },
             "url": {
-              "raw": "{{url}}/api/authors?page=1",
+              "raw": "{{url}}/api/authors",
               "host": [
                 "{{url}}"
               ],
@@ -381,7 +392,8 @@
               "query": [
                 {
                   "key": "page",
-                  "value": "1"
+                  "value": "1",
+                  "disabled": true
                 },
                 {
                   "key": "name",
@@ -931,7 +943,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"user5@user.com\",\n    \"password\": \"123456\"\n}",
+              "raw": "{\n    \"email\": \"user@user.com\",\n    \"password\": \"123456\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1100,7 +1112,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"user4\",\n    \"email\": \"user8@user.com\",\n    \"password\": \"123456\" ,\n    \"role\": \"admin\"\n}",
+              "raw": "{\n    \"name\": \"user\",\n    \"email\": \"user1@user.com\",\n    \"password\": \"123456\" ,\n    \"role\": \"admin\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1209,7 +1221,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"book_id\" : 2\n}",
+              "raw": "{\n    \"book_id\" : 1\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1316,7 +1328,7 @@
               "raw": "{\n    \"book_id\" : 2\n}"
             },
             "url": {
-              "raw": "{{url}}/api/user/loan/2",
+              "raw": "{{url}}/api/user/loan/12",
               "host": [
                 "{{url}}"
               ],
@@ -1324,7 +1336,7 @@
                 "api",
                 "user",
                 "loan",
-                "2"
+                "12"
               ]
             }
           },

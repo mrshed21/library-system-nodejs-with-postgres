@@ -71,6 +71,7 @@ const BookDetails = () => {
 
   const handleBorrow = () => {
     if (!user) {
+      localStorage.setItem("redirectAfterLogin", window.location.pathname);
       navigate('/login');
       return;
     }

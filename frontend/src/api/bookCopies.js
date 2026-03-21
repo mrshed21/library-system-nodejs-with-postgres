@@ -1,7 +1,7 @@
 import api from "./axios";
 
-export const getAllBookCopies = async () => {
-  const response = await api.get("/api/book-copies");
+export const getAllBookCopies = async (params = {}) => {
+  const response = await api.get("/api/book-copies", { params });
   return response.data;
 };
 

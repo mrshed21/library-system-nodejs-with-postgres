@@ -48,8 +48,7 @@ const BooksAdmin = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await getAllBooks();
-      // Backend: { success, data:[...books], meta:{} }
+      const response = await getAllBooks({ limit: 10000 }); // Fetch all books without pagination
       setBooks(response.data ?? []);
     } catch (error) {
       console.error("Error fetching books:", error);

@@ -29,7 +29,7 @@ const BookCopiesAdmin = () => {
   const fetchBookCopies = async () => {
     try {
       // getAllBookCopies returns axios response.data = { success, data:[...], meta:{} }
-      const res = await getAllBookCopies();
+      const res = await getAllBookCopies({ limit: 10000 }); // Fetch all book copies
       console.log("[BookCopies] raw response:", res);
       // Backend wraps array in res.data
       const arr = Array.isArray(res?.data) ? res.data : [];

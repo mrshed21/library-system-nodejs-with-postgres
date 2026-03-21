@@ -10,6 +10,8 @@ import BooksAdmin from "../pages/dashboard/admin/BooksAdmin";
 import UsersAdmin from "../pages/dashboard/admin/UsersAdmin";
 import BookCopiesAdmin from "../pages/dashboard/admin/BookCopiesAdmin";
 import LoansAdmin from "../pages/dashboard/admin/LoansAdmin";
+import GenresAdmin from "../pages/dashboard/admin/GenresAdmin";
+import AuthorsAdmin from "../pages/dashboard/admin/AuthorsAdmin";
 
 import { useAuth } from "../context/AuthContext";
 import Profile from "../pages/ProfilePage";
@@ -38,6 +40,8 @@ function Routers() {
         <Route path="users" element={<UsersAdmin />} />
         <Route path="copies" element={<BookCopiesAdmin />} />
         <Route path="loans" element={<LoansAdmin />} />
+        <Route path="genres" element={<GenresAdmin />} />
+        <Route path="authors" element={<AuthorsAdmin />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

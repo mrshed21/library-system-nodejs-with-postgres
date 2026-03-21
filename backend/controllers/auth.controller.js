@@ -41,7 +41,7 @@ exports.loginUser = async (req, res, next) => {
 
     res.json({
       success: true,
-      message: "User created successfully",
+      message: "User logged in successfully",
       data: user.data,
       token: user.token,
     });

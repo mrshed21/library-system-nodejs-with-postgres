@@ -16,7 +16,10 @@ const Login = () => {
     try {
       await login(email, password);
 
-      navigate("/");
+      // Redirect to the saved URL or home
+      const redirectTo = localStorage.getItem("redirectAfterLogin") || "/";
+      localStorage.removeItem("redirectAfterLogin");
+      navigate(redirectTo);
     } catch (err) {
       setError("username or password is incorrect");
       console.log(err)
