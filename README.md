@@ -111,8 +111,8 @@ library-system-nodejs-with-postgres/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/library-system-nodejs-with-postgres.git
-   cd library-system-nodejs-with-postgres
+   git clone https://github.com/yourusername/Se-library.git
+   cd Se-library
    ```
 
 2. **Set up the Backend**

@@ -47,7 +47,7 @@ The frontend application provides a user-friendly interface for the Advanced Lib
 
 ```bash
 # Clone the repository (if not already done)
-cd library-system-nodejs-with-postgres/frontend
+cd Se-library/frontend
 
 # Install dependencies
 npm install
