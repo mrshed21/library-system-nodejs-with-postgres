@@ -111,7 +111,7 @@ library-system-nodejs-with-postgres/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/Se-library.git
+   git clone https://github.com/mrshed21/Se-library.git
    cd Se-library
    ```
 
@@ -136,7 +136,7 @@ library-system-nodejs-with-postgres/
 3. **Set up the Database**
    ```bash
    # Create the database in PostgreSQL
-   createdb library_db
+   createdb library_db  -- tillexemple
 
    # Run the seed script to populate initial data
    node sql/seed.js
